@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- Configurações para Web App e Cor da Barra do Navegador (Google/Safari) -->
+    <meta name="theme-color" content="#1428A0">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Samsung Treinamentos</title>
+    <meta name="apple-mobile-web-app-title" content="Samsung Treinamentos">
+    <meta name="application-name" content="Samsung Treinamentos">
+    
+    <title>Samsung Treinamentos - Plataforma Oficial</title>
     
     <!-- Fonte de Fallback Oficial (Inter substitui SamsungOne em dispositivos não-Samsung) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2223,12 +2230,13 @@ auth.onAuthStateChanged(async (user) => {
 
 /**
  * SINCRONIZAÇÃO EM TEMPO REAL COM O FIREBASE
+ * [CORREÇÃO]: A função de recriar as perguntas / desafios foi REMOVIDA. 
+ * Se o admin apagar, ficará apagado sem "voltar" como fantasma.
  */
 function setupRealtimeData() {
     db.ref('questions').on('value', (snap) => {
         rawQuestionsObject = snap.val() || {};
         questionsBank = Object.entries(rawQuestionsObject).map(([id, q]) => ({ id, ...q }));
-        if (questionsBank.length === 0) seedDefaultQuestions();
         renderAdminQuestionsList();
         updateKPICards();
     });
@@ -2260,7 +2268,6 @@ function setupRealtimeData() {
         renderAdminChallengesList();
         renderAdminReportsTable();
         updateKPICards();
-        if (challengesList.length === 0) seedDefaultChallenge();
     });
 
     db.ref('certificates').on('value', (snap) => {
@@ -2343,72 +2350,6 @@ function closeNotifModal() {
 /**
  * INÍCIO DAS DEMAIS REGRAS DE NEGÓCIO E UI
  */
-async function seedDefaultQuestions() {
-    const defaults = [
-        {
-            title: "Tecnologia WindFree™",
-            question: "Qual tecnologia exclusiva da Samsung climatiza o ambiente confortavelmente sem a sensação de vento direto?",
-            options: ["WindFree™", "Turbo Flow", "Digital Air", "Eco Fan"],
-            answer: "WindFree™",
-            series: "Básico",
-            createdAt: Date.now()
-        },
-        {
-            title: "Eficiência & Durabilidade",
-            question: "Qual é a principal vantagem dos compressores Samsung Digital Inverter Ultra?",
-            options: ["Ajustar a velocidade do motor continuamente economizando energia", "Desligar o compressor a cada 15 minutos", "Operar sempre em rotação máxima contínua", "Funcionar sem gás refrigerante"],
-            answer: "Ajustar a velocidade do motor continuamente economizando energia",
-            series: "Intermediário",
-            createdAt: Date.now()
-        },
-        {
-            title: "Conectividade & Inteligência",
-            question: "Qual ecossistema inteligente da Samsung permite monitorar consumo de energia e controlar aparelhos via Wi-Fi?",
-            options: ["SmartThings & AI Energy Mode", "SmartLink Lite", "Bixby Hub Offline", "ConnectDirect"],
-            answer: "SmartThings & AI Energy Mode",
-            series: "Avançado",
-            createdAt: Date.now()
-        }
-    ];
-    for (const q of defaults) {
-        await db.ref('questions').push(q);
-    }
-}
-
-async function seedDefaultChallenge() {
-    const defaultChallenge = {
-        title: "Certificação Oficial - Samsung Capacitação Integral",
-        description: "Avaliação técnica oficial com perguntas dedicadas para obtenção do Certificado Samsung Treinamentos.",
-        series: "all",
-        minScore: 70,
-        questionCount: 3,
-        workload: "8 Horas",
-        active: true,
-        questions: [
-            {
-                question: "Qual tecnologia da Samsung proporciona resfriamento eficiente sem fluxo de ar ou vento frio direto?",
-                options: ["WindFree™", "Jet Cool", "Power Flow", "Auto-Swing"],
-                answer: "WindFree™",
-                series: "Básico"
-            },
-            {
-                question: "O compressor Samsung Digital Inverter se destaca principalmente por:",
-                options: ["Ajustar a rotação de forma contínua proporcionando economia de energia", "Ligar e desligar em potência máxima", "Consumir o dobro de corrente", "Funcionar sem óleo lubrificante"],
-                answer: "Ajustar a rotação de forma contínua proporcionando economia de energia",
-                series: "Básico"
-            },
-            {
-                question: "O recurso AI Auto Cooling nos condicionadores de ar Samsung atua:",
-                options: ["Analisando as condições do ambiente e padrões de uso para otimizar modos de climatização", "Apenas emitindo avisos sonoros", "Desligando a energia elétrica da residência", "Bloqueando o acesso remoto do usuário"],
-                answer: "Analisando as condições do ambiente e padrões de uso para otimizar modos de climatização",
-                series: "Intermediário"
-            }
-        ],
-        createdAt: Date.now()
-    };
-    await db.ref('challenges').push(defaultChallenge);
-}
-
 function updateActiveChallengeSidebarBanner() {
     const banner = document.getElementById('sidebarActiveChallengeBanner');
     const title = document.getElementById('sidebarChallengeTitle');
@@ -2932,6 +2873,13 @@ function deliverFreePracticeQuestion() {
             return;
         }
     }
+    
+    // Se o banco estiver completamente vazio (porque o admin apagou tudo)
+    if (pool.length === 0) {
+        appendChatMessage(`⚠️ **Banco de Questões Vazio.**\nO administrador ainda não cadastrou nenhuma pergunta no sistema. Volte mais tarde!`);
+        return;
+    }
+
     const randomQ = pool[Math.floor(Math.random() * pool.length)];
     activeQuestion = randomQ;
     waitingAnswer = true;
@@ -3656,3 +3604,4 @@ lucide.createIcons();
 </script>
 </body>
 </html>
+```eof
