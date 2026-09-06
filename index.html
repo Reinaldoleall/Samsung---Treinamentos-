@@ -14,7 +14,7 @@
     
     <title>Samsung Treinamentos - Plataforma Oficial</title>
     
-    <!-- Fonte de Fallback Oficial (Inter substitui SamsungOne em dispositivos não-Samsung) -->
+    <!-- Fonte de Fallback Oficial -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -98,7 +98,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Estilização Completa de Scrollbar para Produção (Modo Elegante) */
+        /* Estilização Completa de Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -114,7 +114,6 @@
             background: var(--samsung-gray-400);
         }
         
-        /* Fallback para Firefox */
         html {
             scrollbar-width: thin;
             scrollbar-color: var(--samsung-gray-300) transparent;
@@ -130,6 +129,57 @@
             position: fixed;
         }
 
+      .chat-bottom-bar {
+    padding: 0.5rem 0.75rem calc(0.5rem + var(--safe-bottom)) 0.75rem;
+    background: var(--samsung-gray-50);
+    border-top: 1px solid var(--samsung-gray-200);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6 colunas iguais */
+    gap: 0.35rem;
+    align-items: center;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.chat-bottom-bar .btn {
+    width: 100%;
+    min-width: 0; /* Permite encolher */
+    white-space: nowrap;
+    font-size: 0.75rem;
+    padding: 0.5rem 0.35rem;
+    display: flex;
+    flex-direction: column; /* Ícone em cima, texto embaixo */
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.chat-bottom-bar .btn i {
+    width: 14px;
+    height: 14px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .chat-bottom-bar {
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas em mobile */
+        gap: 0.3rem;
+        padding: 0.4rem 0.5rem calc(0.4rem + var(--safe-bottom)) 0.5rem;
+    }
+    
+    .chat-bottom-bar .btn {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.25rem;
+    }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 480px) {
+    .chat-bottom-bar {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas pequenas */
+    }
+}
+
         /* Telas Principais */
         .app-screen {
             position: absolute;
@@ -142,6 +192,76 @@
         }
         .app-screen.active {
             display: flex;
+        }
+
+        /* -------------------------------------------------------------
+           SKELETON LOADING
+           ------------------------------------------------------------- */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes skeletonLoading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-text {
+            height: 16px;
+            margin: 8px 0;
+        }
+
+        .skeleton-title {
+            height: 24px;
+            width: 60%;
+            margin: 12px 0;
+        }
+
+        .skeleton-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+
+        .skeleton-card {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* -------------------------------------------------------------
+           OVERLAY DE LOADING
+           ------------------------------------------------------------- */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--samsung-blue-lighter);
+            border-top-color: var(--samsung-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* -------------------------------------------------------------
@@ -244,6 +364,17 @@
             box-shadow: 0 0 0 3px rgba(20, 40, 160, 0.12);
         }
 
+        .input-error {
+            border-color: var(--samsung-error) !important;
+        }
+
+        .error-message {
+            color: var(--samsung-error);
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0.25rem;
+        }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -257,6 +388,12 @@
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
         }
 
         .btn-primary { 
@@ -340,7 +477,7 @@
             height: 100%;
             overflow-y: auto;
             flex-shrink: 0;
-            z-index: 1000; /* Garante que fique acima de tudo, inclusive do overlay escuro */
+            z-index: 1000;
         }
 
         .chat-sidebar-header {
@@ -453,7 +590,7 @@
         .chat-feed {
             flex: 1;
             overflow-y: auto;
-            padding: 1.5rem 1.5rem 3rem 1.5rem; /* Padding inferior generoso para rolagem total */
+            padding: 1.5rem 1.5rem 3rem 1.5rem;
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
@@ -620,7 +757,7 @@
             height: 100%;
             height: 100dvh;
             border-right: 1px solid var(--samsung-gray-800);
-            z-index: 1000; /* Garante que fique acima de tudo, inclusive do overlay escuro */
+            z-index: 1000;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -738,7 +875,7 @@
         .admin-content-scroll {
             flex: 1;
             overflow-y: auto;
-            padding: 1.5rem 1.5rem 4rem 1.5rem; /* Padding inferior generoso para rolagem total */
+            padding: 1.5rem 1.5rem 4rem 1.5rem;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
@@ -1249,7 +1386,7 @@
             position: fixed;
             inset: 0;
             background: rgba(16, 24, 40, 0.5);
-            z-index: 900; /* Permanece abaixo dos menus (1000) mas acima do resto */
+            z-index: 900;
             display: none;
         }
 
@@ -1278,7 +1415,7 @@
                 left: -320px;
                 top: 0;
                 bottom: 0;
-                z-index: 1000; /* Z-INDEX vital para ficar vivo sobre a tela preta e poder ter scroll */
+                z-index: 1000;
                 transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
             .chat-sidebar.active { 
@@ -1290,7 +1427,7 @@
                 left: -320px;
                 top: 0;
                 bottom: 0;
-                z-index: 1000; /* Z-INDEX vital para ficar vivo sobre a tela preta e poder ter scroll */
+                z-index: 1000;
                 transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
             .admin-sidebar.active { 
@@ -1354,6 +1491,11 @@
 <!-- OVERLAY PARA DRAWERS MOBILE -->
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeAllDrawers()"></div>
 
+<!-- OVERLAY DE LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
 <!-- SISTEMA DE TOASTS -->
 <div class="toast-container" id="toastContainer"></div>
 
@@ -1363,15 +1505,13 @@
         <h4 id="dialogTitle" style="font-size:1.15rem;font-weight:700;">Confirmação</h4>
         <p id="dialogMessage" style="color:var(--text-muted);font-size:0.92rem;line-height:1.5;">Você tem certeza que deseja executar esta ação?</p>
         <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:0.5rem;">
-            <button class="btn btn-secondary" onclick="closeDialog(false)">Cancelar</button>
+            <button class="btn btn-secondary" id="dialogCancelBtn" onclick="closeDialog(false)">Cancelar</button>
             <button class="btn btn-primary" id="dialogConfirmBtn">Confirmar</button>
         </div>
     </div>
 </div>
 
-<!-- =========================================================================
-     MODAL DE NOTIFICAÇÕES (TELA SEPARADA PARA NÃO SUJAR O CHAT)
-     ========================================================================= -->
+<!-- MODAL DE NOTIFICAÇÕES -->
 <div class="custom-dialog-overlay" id="notifModalOverlay">
     <div class="custom-dialog-card" style="max-height: 80vh; display:flex; flex-direction:column; max-width: 500px; padding: 1.5rem;">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--samsung-gray-200); padding-bottom: 1rem; margin-bottom: 1rem;">
@@ -1388,9 +1528,7 @@
     </div>
 </div>
 
-<!-- =========================================================================
-     TELA 1: LOGIN E REGISTRO
-     ========================================================================= -->
+<!-- TELA 1: LOGIN E REGISTRO -->
 <div id="screenLogin" class="app-screen active">
     <div class="login-card">
         <div class="login-brand">
@@ -1413,7 +1551,8 @@
 
         <div class="input-control">
             <label for="loginPassword">Senha de acesso *</label>
-            <input type="password" id="loginPassword" placeholder="" value="admin123">
+            <input type="password" id="loginPassword" placeholder="Digite sua senha">
+            <small style="color:var(--text-muted);font-size:0.7rem;">Mínimo 8 caracteres, incluindo números e letras</small>
         </div>
 
         <div id="loginFeedback" style="display:none;font-size:0.85rem;color:var(--danger);font-weight:500;"></div>
@@ -1430,9 +1569,7 @@
     </div>
 </div>
 
-<!-- =========================================================================
-     TELA 2: ÁREA DO ALUNO (CHAT / TREINAMENTO)
-     ========================================================================= -->
+<!-- TELA 2: ÁREA DO ALUNO -->
 <div id="screenApp" class="app-screen">
     <aside class="chat-sidebar" id="chatSidebar">
         <div class="chat-sidebar-header">
@@ -1514,7 +1651,6 @@
                     <i data-lucide="settings" size="16"></i> <span class="desktop-only">Painel ADM</span>
                 </button>
 
-                <!-- Sino de Notificações com Tela Separada -->
                 <div class="notif-bell" onclick="showStudentNotifications()">
                     <i data-lucide="bell" size="22"></i>
                     <span class="notif-bell-badge" id="studentNotifBadge" style="display:none;">0</span>
@@ -1526,7 +1662,6 @@
             <!-- Mensagens são injetadas via JavaScript -->
         </div>
 
-        <!-- Entrada de Texto & Envio -->
         <div class="chat-input-area">
             <input type="text" id="chatTextInput" placeholder="Digite uma resposta ou comando (ex: /desafio, /certificado, /ajuda)..." onkeydown="if(event.key==='Enter') submitChatMessage()">
             <button class="btn btn-primary btn-icon" onclick="submitChatMessage()">
@@ -1534,13 +1669,12 @@
             </button>
         </div>
 
-        <!-- Atalhos rápidos inferiores -->
         <div class="chat-bottom-bar">
             <button class="btn btn-primary btn-sm" onclick="handleStudentCommand('/desafio')">
-                <i data-lucide="trophy" size="14"></i> Desafio Oficial Samsung
+                <i data-lucide="trophy" size="14"></i> Desafio
             </button>
             <button class="btn btn-secondary btn-sm" onclick="handleStudentCommand('/pergunta')">
-                <i data-lucide="play" size="14"></i> Prática Livre
+                <i data-lucide="play" size="14"></i> Prática
             </button>
             <button class="btn btn-secondary btn-sm" onclick="handleStudentCommand('/dica')">
                 <i data-lucide="lightbulb" size="14"></i> Dica
@@ -1558,9 +1692,7 @@
     </main>
 </div>
 
-<!-- =========================================================================
-     TELA 3: PAINEL ADMINISTRATIVO
-     ========================================================================= -->
+<!-- TELA 3: PAINEL ADMINISTRATIVO -->
 <div id="screenAdmin" class="app-screen">
     <aside class="admin-sidebar" id="adminSidebar">
         <div class="admin-sidebar-header">
@@ -1633,7 +1765,7 @@
 
         <main class="admin-content-scroll">
 
-            <!-- ===================== SEÇÃO 1: DASHBOARD ===================== -->
+            <!-- SEÇÃO 1: DASHBOARD -->
             <section id="secDashboard" class="admin-view active">
                 <div class="stats-kpi-grid">
                     <div class="kpi-card">
@@ -1676,7 +1808,7 @@
                 </div>
             </section>
 
-            <!-- ===================== SEÇÃO: GESTÃO DE DESAFIOS ===================== -->
+            <!-- SEÇÃO: GESTÃO DE DESAFIOS -->
             <section id="secChallenges" class="admin-view">
                 <div class="panel-box">
                     <div class="panel-box-header">
@@ -1772,7 +1904,7 @@
                 </div>
             </section>
 
-            <!-- ===================== SEÇÃO 2: QUESTÕES ===================== -->
+            <!-- SEÇÃO 2: QUESTÕES -->
             <section id="secQuestions" class="admin-view">
                 <div class="panel-box">
                     <div class="panel-box-header">
@@ -1848,7 +1980,7 @@
                 </div>
             </section>
 
-            <!-- ===================== SEÇÃO 3: USUÁRIOS ===================== -->
+            <!-- SEÇÃO 3: USUÁRIOS -->
             <section id="secUsers" class="admin-view">
                 <div class="panel-box">
                     <div class="panel-box-header">
@@ -1875,7 +2007,7 @@
                 </div>
             </section>
 
-            <!-- ===================== SEÇÃO 4: RELATÓRIOS & DESEMPENHO ===================== -->
+            <!-- SEÇÃO 4: RELATÓRIOS & DESEMPENHO -->
             <section id="secReports" class="admin-view">
                 <div class="panel-box">
                     <div class="panel-box-header">
@@ -1905,7 +2037,7 @@
                 </div>
             </section>
 
-            <!-- ===================== SEÇÃO 5: RANKING CORPORATIVO ===================== -->
+            <!-- SEÇÃO 5: RANKING CORPORATIVO -->
             <section id="secLeaderboard" class="admin-view">
                 <div class="panel-box">
                     <div class="panel-box-header">
@@ -1935,7 +2067,7 @@
                 </div>
             </section>
 
-            <!-- ===================== SEÇÃO 6: AVISOS & NOTIFICAÇÕES ===================== -->
+            <!-- SEÇÃO 6: AVISOS & NOTIFICAÇÕES -->
             <section id="secBroadcast" class="admin-view">
                 <div class="panel-box">
                     <div class="panel-box-header">
@@ -1986,9 +2118,6 @@
     </div>
 </div>
 
-<!-- =========================================================================
-     JAVASCRIPT
-     ========================================================================= -->
 <script>
 /**
  * CONFIGURAÇÃO DO FIREBASE (COMPAT v9)
@@ -2004,11 +2133,18 @@ const firebaseConfig = {
     measurementId: "G-7HHR78MHDP"
 };
 
+// Inicialização do Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 const auth = firebase.auth();
 const db = firebase.database();
+
+// Configurar persistência de sessão
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .catch((error) => {
+        console.error('Erro ao configurar persistência:', error);
+    });
 
 /**
  * ESTADO GLOBAL DA APLICAÇÃO
@@ -2037,43 +2173,205 @@ let activeSeriesFilter = 'all';
 let studentStats = { score: 0, hits: 0, total: 0 };
 
 /**
- * SISTEMA DE DIÁLOGOS E TOASTS
+ * SISTEMA DE CACHE
  */
-function showToast(message, type = 'info') {
+class CacheManager {
+    constructor() {
+        this.cache = new Map();
+        this.defaultTTL = 5 * 60 * 1000; // 5 minutos
+    }
+
+    async get(key, fetcher, ttl = this.defaultTTL) {
+        const cached = this.cache.get(key);
+        
+        if (cached && Date.now() - cached.timestamp < ttl) {
+            return cached.data;
+        }
+
+        const data = await fetcher();
+        this.cache.set(key, {
+            data,
+            timestamp: Date.now()
+        });
+        
+        return data;
+    }
+
+    invalidate(key) {
+        this.cache.delete(key);
+    }
+}
+
+const cacheManager = new CacheManager();
+
+/**
+ * SISTEMA DE RETRY AUTOMÁTICO
+ */
+async function retryOperation(operation, maxAttempts = 3, delay = 1000) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+            return await operation();
+        } catch (error) {
+            if (attempt === maxAttempts) throw error;
+            await new Promise(resolve => setTimeout(resolve, delay * attempt));
+        }
+    }
+}
+
+/**
+ * SISTEMA DE LOADING
+ */
+const loadingManager = {
+    overlay: null,
+    
+    init() {
+        this.overlay = document.getElementById('loadingOverlay');
+    },
+    
+    show() {
+        if (this.overlay) {
+            this.overlay.classList.add('active');
+        }
+    },
+    
+    hide() {
+        if (this.overlay) {
+            this.overlay.classList.remove('active');
+        }
+    },
+    
+    async withLoading(operation) {
+        this.show();
+        try {
+            return await operation();
+        } finally {
+            this.hide();
+        }
+    }
+};
+
+/**
+ * SISTEMA DE VALIDAÇÃO
+ */
+const validators = {
+    email: (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    },
+    
+    password: (password) => {
+        return password.length >= 8 && 
+               /\d/.test(password) && 
+               /[a-zA-Z]/.test(password);
+    },
+    
+    name: (name) => {
+        return name && name.trim().length >= 3;
+    }
+};
+
+/**
+ * SISTEMA DE TOASTS
+ */
+function showToast(message, type = 'info', duration = 4000) {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
+    
     let icon = 'info';
     if (type === 'success') icon = 'check-circle';
     if (type === 'error') icon = 'alert-triangle';
-
-    toast.innerHTML = `<i data-lucide="${icon}" size="18"></i> <span>${message}</span>`;
+    if (type === 'warning') icon = 'alert-circle';
+    
+    toast.innerHTML = `
+        <i data-lucide="${icon}" size="18"></i> 
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;margin-left:auto;">
+            <i data-lucide="x" size="14"></i>
+        </button>
+    `;
+    
     container.appendChild(toast);
     lucide.createIcons();
-
+    
     setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(-10px)';
-        toast.style.transition = 'all 0.3s';
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
+        if (toast.parentElement) {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            toast.style.transition = 'all 0.3s';
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, duration);
 }
 
+/**
+ * SISTEMA DE DIÁLOGOS
+ */
 let onDialogConfirmCallback = null;
-function showConfirmDialog(title, message, onConfirm) {
+
+function showConfirmDialog(title, message, onConfirm, confirmText = 'Confirmar', cancelText = 'Cancelar') {
     document.getElementById('dialogTitle').textContent = title;
     document.getElementById('dialogMessage').textContent = message;
+    document.getElementById('dialogConfirmBtn').textContent = confirmText;
+    document.getElementById('dialogCancelBtn').textContent = cancelText;
+    
     onDialogConfirmCallback = onConfirm;
     document.getElementById('customDialogOverlay').classList.add('active');
+    
+    setTimeout(() => document.getElementById('dialogConfirmBtn').focus(), 100);
 }
+
 function closeDialog(confirmed = false) {
     document.getElementById('customDialogOverlay').classList.remove('active');
+    
     if (confirmed && typeof onDialogConfirmCallback === 'function') {
         onDialogConfirmCallback();
     }
+    
     onDialogConfirmCallback = null;
 }
 document.getElementById('dialogConfirmBtn').addEventListener('click', () => closeDialog(true));
+
+/**
+ * SISTEMA DE SKELETON LOADING
+ */
+function showSkeleton(containerId, type = 'card') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    const skeletons = {
+        card: `
+            <div class="skeleton-card">
+                <div class="skeleton skeleton-title"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text"></div>
+            </div>
+        `,
+        list: `
+            ${Array(5).fill(`
+                <div style="display:flex;align-items:center;gap:1rem;padding:1rem;">
+                    <div class="skeleton skeleton-avatar"></div>
+                    <div style="flex:1;">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text" style="width:60%;"></div>
+                    </div>
+                </div>
+            `).join('')}
+        `,
+        table: `
+            ${Array(5).fill(`
+                <tr>
+                    <td><div class="skeleton skeleton-text"></div></td>
+                    <td><div class="skeleton skeleton-text"></div></td>
+                    <td><div class="skeleton skeleton-text"></div></td>
+                    <td><div class="skeleton skeleton-text"></div></td>
+                </tr>
+            `).join('')}
+        `
+    };
+    
+    container.innerHTML = skeletons[type] || skeletons.card;
+}
 
 /**
  * NAVEGAÇÃO E DRAWERS
@@ -2115,6 +2413,12 @@ function closeAllDrawers() {
     document.getElementById('drawerOverlay')?.classList.remove('active');
 }
 
+function closeAllModals() {
+    closeDialog(false);
+    closeNotifModal();
+    closeAllDrawers();
+}
+
 /**
  * AUTENTICAÇÃO
  */
@@ -2125,8 +2429,9 @@ function toggleAuthMode() {
     const toggleText = document.getElementById('authToggleText');
     const subtitle = document.getElementById('authSubtitle');
     const feedback = document.getElementById('loginFeedback');
+    
     feedback.style.display = 'none';
-
+    
     if (isAuthSignUpMode) {
         nameGroup.style.display = 'flex';
         submitText.textContent = 'Criar Minha Conta';
@@ -2142,107 +2447,126 @@ function toggleAuthMode() {
 
 async function handleAuthSubmit() {
     const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
+    const password = document.getElementById('loginPassword').value;
     const fullName = document.getElementById('regFullName').value.trim();
     const feedback = document.getElementById('loginFeedback');
+    
     feedback.style.display = 'none';
-
+    feedback.textContent = '';
+    
     if (!email || !password) {
         feedback.textContent = 'Preencha e-mail e senha para prosseguir.';
         feedback.style.display = 'block';
         return;
     }
-
-    if (isAuthSignUpMode && (!fullName || fullName.length < 3)) {
+    
+    if (!validators.email(email)) {
+        feedback.textContent = 'Formato de e-mail inválido.';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    if (!validators.password(password)) {
+        feedback.textContent = 'A senha deve ter no mínimo 8 caracteres, incluindo números e letras.';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    if (isAuthSignUpMode && !validators.name(fullName)) {
         feedback.textContent = 'Por favor, informe seu nome completo (mínimo 3 caracteres).';
         feedback.style.display = 'block';
         return;
     }
-
+    
+    loadingManager.show();
+    
     try {
-        if (isAuthSignUpMode) {
-            const userCred = await auth.createUserWithEmailAndPassword(email, password);
-            await userCred.user.updateProfile({ displayName: fullName });
-
-            const initialRole = email.toLowerCase().includes('admin') ? 'admin' : 'user';
-            const userData = {
-                name: fullName,
-                email: email,
-                role: initialRole,
-                createdAt: Date.now()
-            };
-
-            await db.ref('users/' + userCred.user.uid).set(userData);
-            showToast(`Conta criada com sucesso! Seja bem-vindo à Samsung, ${fullName}.`, 'success');
-        } else {
-            await auth.signInWithEmailAndPassword(email, password);
-            showToast('Sessão iniciada com sucesso!', 'success');
-        }
-    } catch (err) {
-        feedback.textContent = err.message || 'Erro na operação de autenticação.';
-        feedback.style.display = 'block';
-    }
-}
-
-function logoutAccount() {
-    showConfirmDialog('Encerrar Sessão', 'Deseja realmente sair da sua conta?', () => {
-        auth.signOut().then(() => {
-            showToast('Você saiu do sistema.', 'info');
+        await retryOperation(async () => {
+            if (isAuthSignUpMode) {
+                const userCred = await auth.createUserWithEmailAndPassword(email, password);
+                await userCred.user.updateProfile({ displayName: fullName });
+                
+                const initialRole = email.toLowerCase().includes('admin') ? 'admin' : 'user';
+                const userData = {
+                    name: fullName,
+                    email: email,
+                    role: initialRole,
+                    createdAt: Date.now(),
+                    lastLogin: Date.now()
+                };
+                
+                await db.ref('users/' + userCred.user.uid).set(userData);
+                showToast(`Conta criada com sucesso! Seja bem-vindo à Samsung, ${fullName}.`, 'success');
+            } else {
+                await auth.signInWithEmailAndPassword(email, password);
+                showToast('Sessão iniciada com sucesso!', 'success');
+            }
         });
-    });
+    } catch (err) {
+        let errorMessage = 'Erro na operação de autenticação.';
+        
+        switch (err.code) {
+            case 'auth/user-not-found':
+                errorMessage = 'Usuário não encontrado. Verifique seu e-mail.';
+                break;
+            case 'auth/wrong-password':
+                errorMessage = 'Senha incorreta. Tente novamente.';
+                break;
+            case 'auth/email-already-in-use':
+                errorMessage = 'Este e-mail já está cadastrado. Faça login.';
+                break;
+            case 'auth/invalid-email':
+                errorMessage = 'E-mail inválido.';
+                break;
+            case 'auth/weak-password':
+                errorMessage = 'Senha muito fraca. Use no mínimo 8 caracteres.';
+                break;
+        }
+        
+        feedback.textContent = errorMessage;
+        feedback.style.display = 'block';
+    } finally {
+        loadingManager.hide();
+    }
 }
 
-auth.onAuthStateChanged(async (user) => {
-    if (user) {
-        currentUser = user;
-        const snap = await db.ref('users/' + user.uid).once('value');
-        const data = snap.val() || {};
-        
-        currentProfile = {
-            name: data.name || user.displayName || user.email.split('@')[0],
-            email: user.email,
-            role: data.role || 'user'
-        };
-
-        document.getElementById('studentWelcomeText').textContent = `Bem-vindo, ${currentProfile.name}`;
-        document.getElementById('userSidebarName').textContent = currentProfile.name;
-        document.getElementById('userSidebarRole').textContent = currentProfile.role === 'admin' ? 'Administrador' : 'Colaborador';
-        document.getElementById('adminCurrentUserName').textContent = currentProfile.name;
-
-        const initials = currentProfile.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
-        document.getElementById('userSidebarInitials').textContent = initials || 'ST';
-
-        const btnAdmin = document.getElementById('btnEnterAdmin');
-        if (currentProfile.role === 'admin') {
-            btnAdmin.style.display = 'inline-flex';
-        } else {
-            btnAdmin.style.display = 'none';
+async function logoutAccount() {
+    showConfirmDialog(
+        'Encerrar Sessão', 
+        'Deseja realmente sair da sua conta?',
+        async () => {
+            loadingManager.show();
+            try {
+                await auth.signOut();
+                showToast('Você saiu do sistema.', 'info');
+            } catch (error) {
+                showToast('Erro ao sair. Tente novamente.', 'error');
+            } finally {
+                loadingManager.hide();
+            }
         }
-
-        setupRealtimeData();
-        showScreen('screenApp');
-    } else {
-        currentUser = null;
-        currentProfile = { role: 'user', name: '', email: '' };
-        showScreen('screenLogin');
-    }
-});
+    );
+}
 
 /**
  * SINCRONIZAÇÃO EM TEMPO REAL COM O FIREBASE
- * [CORREÇÃO]: A função de recriar as perguntas / desafios foi REMOVIDA. 
- * Se o admin apagar, ficará apagado sem "voltar" como fantasma.
  */
 function setupRealtimeData() {
+    // Mostrar skeletons durante carregamento
+    showSkeleton('adminQuestionsList', 'list');
+    showSkeleton('adminUsersTableBody', 'table');
+    
     db.ref('questions').on('value', (snap) => {
         rawQuestionsObject = snap.val() || {};
         questionsBank = Object.entries(rawQuestionsObject).map(([id, q]) => ({ id, ...q }));
+        cacheManager.invalidate('questions');
         renderAdminQuestionsList();
         updateKPICards();
     });
 
     db.ref('users').on('value', (snap) => {
         usersMap = snap.val() || {};
+        cacheManager.invalidate('users');
         renderAdminUsersTable();
         renderAdminReportsTable();
         renderLeaderboardTables();
@@ -2280,25 +2604,22 @@ function setupRealtimeData() {
         const val = snap.val() || {};
         notificationsList = Object.entries(val).map(([id, n]) => ({ id, ...n }));
         renderBroadcastHistory();
-        updateNotificationBadges(); // Atualiza contador de notificações
+        updateNotificationBadges();
         updateKPICards();
     });
 }
 
 /**
- * SISTEMA DE NOTIFICAÇÕES (MODAL SEPARADO & LÓGICA DE LIDO/NÃO LIDO)
+ * SISTEMA DE NOTIFICAÇÕES
  */
 function updateNotificationBadges() {
     const badge = document.getElementById('studentNotifBadge');
-    if (!badge) return;
-
-    // Busca o timestamp da última vez que o usuário abriu a aba de notificações
-    const storageKey = currentUser ? `samsung_notif_read_${currentUser.uid}` : 'samsung_notif_read_anon';
-    const lastReadTime = parseInt(localStorage.getItem(storageKey) || '0');
+    if (!badge || !currentUser) return;
     
-    // Filtra comunicados mais recentes que a última leitura
+    const storageKey = `samsung_notif_read_${currentUser.uid}`;
+    const lastReadTime = parseInt(localStorage.getItem(storageKey) || '0');
     const unreadList = notificationsList.filter(n => n.timestamp > lastReadTime);
-
+    
     if (unreadList.length > 0) {
         badge.style.display = 'flex';
         badge.textContent = unreadList.length > 9 ? '9+' : unreadList.length;
@@ -2310,34 +2631,44 @@ function updateNotificationBadges() {
 function showStudentNotifications() {
     const content = document.getElementById('notifModalContent');
     
-    if (notificationsList.length === 0) {
-        content.innerHTML = '<p style="color:var(--text-muted);font-size:0.95rem;text-align:center;padding:2rem 0;">Você não possui nenhum comunicado no momento.</p>';
-    } else {
-        const sorted = [...notificationsList].sort((a, b) => b.timestamp - a.timestamp);
-        content.innerHTML = sorted.map(n => `
-            <div style="background:var(--samsung-gray-50); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius:0.75rem; padding:1.25rem;">
-                <div style="display:flex;justify-content:space-between; align-items:flex-start; margin-bottom:0.6rem; gap:1rem;">
-                    <strong style="font-size:1rem;color:var(--text-main); line-height:1.3;">${n.title}</strong>
-                    <span style="font-size:0.75rem;color:var(--text-muted); white-space:nowrap;">${new Date(n.timestamp).toLocaleDateString('pt-BR')}</span>
-                </div>
-                <p style="font-size:0.92rem;color:var(--text-muted);line-height:1.6;">${n.body}</p>
-            </div>
-        `).join('');
-    }
-
-    // Registra que as mensagens foram lidas agora
-    if (currentUser) {
-        const storageKey = `samsung_notif_read_${currentUser.uid}`;
-        localStorage.setItem(storageKey, Date.now().toString());
-    }
+    content.innerHTML = '<div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text"></div>';
     
-    // Atualiza o contador imediatamente (ficará invisível)
-    updateNotificationBadges();
-
-    // Abre o Modal Separado
+    setTimeout(() => {
+        if (notificationsList.length === 0) {
+            content.innerHTML = '<p style="color:var(--text-muted);font-size:0.95rem;text-align:center;padding:2rem 0;">Você não possui nenhum comunicado no momento.</p>';
+        } else {
+            const sorted = [...notificationsList].sort((a, b) => b.timestamp - a.timestamp);
+            
+            content.innerHTML = sorted.map(n => `
+                <div style="background:var(--samsung-gray-50); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius:0.75rem; padding:1.25rem; transition: all 0.2s;">
+                    <div style="display:flex;justify-content:space-between; align-items:flex-start; margin-bottom:0.6rem; gap:1rem;">
+                        <strong style="font-size:1rem;color:var(--text-main); line-height:1.3;">${n.title}</strong>
+                        <span style="font-size:0.75rem;color:var(--text-muted); white-space:nowrap;">
+                            ${new Date(n.timestamp).toLocaleDateString('pt-BR', { 
+                                day: '2-digit', 
+                                month: 'short', 
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}
+                        </span>
+                    </div>
+                    <p style="font-size:0.92rem;color:var(--text-muted);line-height:1.6;">${n.body}</p>
+                </div>
+            `).join('');
+        }
+        
+        if (currentUser) {
+            const storageKey = `samsung_notif_read_${currentUser.uid}`;
+            localStorage.setItem(storageKey, Date.now().toString());
+            updateNotificationBadges();
+        }
+        
+        lucide.createIcons();
+    }, 300);
+    
     document.getElementById('notifModalOverlay').classList.add('active');
     
-    // Se for mobile, fecha o menu lateral para facilitar a visão do modal
     if (window.innerWidth <= 900) {
         closeAllDrawers();
     }
@@ -2348,7 +2679,7 @@ function closeNotifModal() {
 }
 
 /**
- * INÍCIO DAS DEMAIS REGRAS DE NEGÓCIO E UI
+ * FUNÇÕES DE UI
  */
 function updateActiveChallengeSidebarBanner() {
     const banner = document.getElementById('sidebarActiveChallengeBanner');
@@ -2365,336 +2696,6 @@ function updateActiveChallengeSidebarBanner() {
     }
 }
 
-function downloadChallengeJsonTemplate() {
-    const template = [
-        {
-            "question": "Qual tecnologia exclusiva da Samsung climatiza o ambiente sem vento frio direto?",
-            "options": [
-                "WindFree™",
-                "Turbo Cool",
-                "Digital Inverter",
-                "Eco Flow"
-            ],
-            "answer": "WindFree™",
-            "series": "Básico"
-        },
-        {
-            "question": "A principal vantagem da tecnologia Samsung Digital Inverter é:",
-            "options": [
-                "Ajustar a rotação de forma contínua proporcionando alta eficiência energética",
-                "Desligar o compressor a cada ciclo de 5 minutos",
-                "Aumentar o ruído sonoro para indicar refrigeração",
-                "Funcionar exclusivamente em 110V"
-            ],
-            "answer": "Ajustar a rotação de forma contínua proporcionando alta eficiência energética",
-            "series": "Básico"
-        },
-        {
-            "question": "O aplicativo SmartThings com recurso AI Energy Mode permite:",
-            "options": [
-                "Monitorar e reduzir o consumo de energia em tempo real através de inteligência artificial",
-                "Desativar permanentemente o compressor",
-                "Apenas ligar o aparelho via Bluetooth de curto alcance",
-                "Eliminar a necessidade de filtros de ar"
-            ],
-            "answer": "Monitorar e reduzir o consumo de energia em tempo real através de inteligência artificial",
-            "series": "Intermediário"
-        }
-    ];
-
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(template, null, 2));
-    const a = document.createElement('a');
-    a.setAttribute("href", dataStr);
-    a.setAttribute("download", `modelo_perguntas_desafio_samsung.json`);
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    showToast('Modelo JSON baixado! Preencha e clique em "Carregar Desafio (JSON)".', 'info');
-}
-
-function handleChallengeJsonUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            const parsed = JSON.parse(e.target.result);
-            if (!Array.isArray(parsed) || parsed.length === 0) {
-                showToast('O arquivo JSON deve conter uma lista com pelo menos 1 pergunta.', 'error');
-                return;
-            }
-
-            const cleanList = [];
-            for (let i = 0; i < parsed.length; i++) {
-                const item = parsed[i];
-                if (!item.question || typeof item.question !== 'string' || item.question.trim().length === 0) {
-                    showToast(`Pergunta ${i + 1} inválida: campo "question" é obrigatório.`, 'error');
-                    return;
-                }
-                if (!Array.isArray(item.options) || item.options.length < 2) {
-                    showToast(`Pergunta ${i + 1} inválida: campo "options" deve conter ao menos 2 alternativas.`, 'error');
-                    return;
-                }
-                if (!item.answer || !item.options.includes(item.answer)) {
-                    showToast(`Pergunta ${i + 1} inválida: a resposta "answer" deve ser idêntica a uma das opções em "options".`, 'error');
-                    return;
-                }
-
-                cleanList.push({
-                    question: item.question.trim(),
-                    options: item.options.map(opt => String(opt).trim()),
-                    answer: String(item.answer).trim(),
-                    series: ['Básico', 'Intermediário', 'Avançado'].includes(item.series) ? item.series : 'Básico'
-                });
-            }
-
-            challengeStagedQuestions = cleanList;
-            document.getElementById('challengeQuestionCountInput').value = cleanList.length;
-            renderStagedQuestions();
-            showToast(`✅ ${cleanList.length} perguntas carregadas e anexadas ao desafio Samsung com sucesso!`, 'success');
-        } catch (err) {
-            showToast('Erro ao ler o arquivo JSON: formato incorreto ou sintaxe inválida.', 'error');
-        }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
-}
-
-function removeStagedQuestion(index) {
-    challengeStagedQuestions.splice(index, 1);
-    document.getElementById('challengeQuestionCountInput').value = challengeStagedQuestions.length;
-    renderStagedQuestions();
-    showToast('Pergunta removida do desafio.', 'info');
-}
-
-function renderStagedQuestions() {
-    const container = document.getElementById('stagedQuestionsContainer');
-    if (!container) return;
-
-    if (!challengeStagedQuestions || challengeStagedQuestions.length === 0) {
-        container.innerHTML = `<p style="font-size:0.85rem;color:var(--text-muted);font-style:italic;">Nenhuma pergunta anexada a este desafio ainda. Clique em "Carregar Desafio (JSON)" ou baixe o modelo acima.</p>`;
-        return;
-    }
-
-    container.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
-            <span style="font-size:0.82rem;font-weight:700;color:var(--accent);">
-                Total de Questões Anexadas: ${challengeStagedQuestions.length}
-            </span>
-            <button class="btn btn-secondary btn-sm" type="button" onclick="challengeStagedQuestions=[];renderStagedQuestions();" style="color:var(--danger);">
-                Limpar Todas
-            </button>
-        </div>
-        ${challengeStagedQuestions.map((q, idx) => `
-            <div class="attached-question-pill">
-                <div style="flex:1;min-width:0;">
-                    <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${idx + 1}. ${q.question}</div>
-                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">
-                        Gabarito: <strong style="color:var(--success);">${q.answer}</strong> • ${q.options.length} alternativas • Nível: ${q.series || 'Básico'}
-                    </div>
-                </div>
-                <button class="btn btn-danger btn-sm" type="button" onclick="removeStagedQuestion(${idx})" style="padding:0.3rem 0.5rem;">
-                    <i data-lucide="x" size="14"></i>
-                </button>
-            </div>
-        `).join('')}
-    `;
-    lucide.createIcons();
-}
-
-async function saveOrUpdateChallenge() {
-    const editId = document.getElementById('editingChallengeId').value;
-    const title = document.getElementById('challengeTitleInput').value.trim();
-    const series = document.getElementById('challengeSeriesSelect').value;
-    const workload = document.getElementById('challengeWorkloadInput').value.trim() || '8 Horas';
-    const minScore = parseInt(document.getElementById('challengeMinScoreInput').value) || 70;
-    const questionCount = parseInt(document.getElementById('challengeQuestionCountInput').value) || (challengeStagedQuestions.length || 5);
-    const description = document.getElementById('challengeDescriptionInput').value.trim();
-
-    if (!title) {
-        showToast('Informe o título do Desafio Oficial (constará no Certificado).', 'error');
-        return;
-    }
-
-    if (!challengeStagedQuestions || challengeStagedQuestions.length === 0) {
-        showToast('Atenção: Carregue o arquivo JSON com as perguntas deste desafio antes de salvar.', 'error');
-        return;
-    }
-
-    const payload = {
-        title,
-        series,
-        workload,
-        minScore: Math.min(100, Math.max(10, minScore)),
-        questionCount: Math.min(questionCount, challengeStagedQuestions.length),
-        description: description || 'Desafio Oficial de Certificação Corporativa Samsung Treinamentos.',
-        questions: challengeStagedQuestions,
-        updatedAt: Date.now()
-    };
-
-    try {
-        if (editId) {
-            await db.ref('challenges/' + editId).update(payload);
-            showToast('Desafio e perguntas anexadas atualizados com sucesso!', 'success');
-        } else {
-            payload.active = challengesList.length === 0;
-            payload.createdAt = Date.now();
-            await db.ref('challenges').push(payload);
-            showToast('Novo desafio oficial e suas perguntas foram salvos no Firebase!', 'success');
-        }
-        cancelChallengeEdit();
-    } catch (err) {
-        showToast('Erro ao salvar desafio: ' + err.message, 'error');
-    }
-}
-
-function startEditChallenge(id) {
-    const c = challengesList.find(item => item.id === id);
-    if (!c) return;
-
-    document.getElementById('editingChallengeId').value = id;
-    document.getElementById('challengeTitleInput').value = c.title || '';
-    document.getElementById('challengeSeriesSelect').value = c.series || 'all';
-    document.getElementById('challengeWorkloadInput').value = c.workload || '8 Horas';
-    document.getElementById('challengeMinScoreInput').value = c.minScore || 70;
-    document.getElementById('challengeQuestionCountInput').value = c.questionCount || (c.questions?.length || 5);
-    document.getElementById('challengeDescriptionInput').value = c.description || '';
-
-    challengeStagedQuestions = Array.isArray(c.questions) ? JSON.parse(JSON.stringify(c.questions)) : [];
-    renderStagedQuestions();
-
-    document.getElementById('challengeFormTitle').innerHTML = `<i data-lucide="edit" size="20"></i> Editando Desafio Samsung & Perguntas`;
-    document.getElementById('btnSaveChallengeText').textContent = 'Atualizar Desafio';
-    document.getElementById('btnCancelChallengeEdit').style.display = 'inline-flex';
-
-    document.querySelector('.admin-content-scroll').scrollTop = 0;
-    lucide.createIcons();
-}
-
-function cancelChallengeEdit() {
-    document.getElementById('editingChallengeId').value = '';
-    document.getElementById('challengeTitleInput').value = '';
-    document.getElementById('challengeSeriesSelect').value = 'all';
-    document.getElementById('challengeWorkloadInput').value = '8 Horas';
-    document.getElementById('challengeMinScoreInput').value = 70;
-    document.getElementById('challengeQuestionCountInput').value = 5;
-    document.getElementById('challengeDescriptionInput').value = '';
-    challengeStagedQuestions = [];
-    renderStagedQuestions();
-
-    document.getElementById('challengeFormTitle').innerHTML = `<i data-lucide="plus-circle" size="20"></i> Criar Novo Desafio Samsung`;
-    document.getElementById('btnSaveChallengeText').textContent = 'Salvar Desafio';
-    document.getElementById('btnCancelChallengeEdit').style.display = 'none';
-    lucide.createIcons();
-}
-
-async function setActiveChallengeOfficial(targetId) {
-    showConfirmDialog('Ativar Desafio Oficial', 'Definir este desafio como o Desafio Oficial ativo para todos os participantes?', async () => {
-        try {
-            const updates = {};
-            challengesList.forEach(ch => {
-                updates['challenges/' + ch.id + '/active'] = (ch.id === targetId);
-            });
-            await db.ref().update(updates);
-            showToast('Desafio ativado com sucesso como oficial!', 'success');
-        } catch (e) {
-            showToast('Erro ao ativar: ' + e.message, 'error');
-        }
-    });
-}
-
-function removeChallenge(id) {
-    showConfirmDialog('Excluir Desafio', 'Tem certeza que deseja apagar este desafio e todas as suas perguntas vinculadas?', async () => {
-        try {
-            await db.ref('challenges/' + id).remove();
-            showToast('Desafio removido com sucesso.', 'success');
-        } catch (e) {
-            showToast('Erro ao remover: ' + e.message, 'error');
-        }
-    });
-}
-
-function exportChallengeQuestionsJSON(id) {
-    const c = challengesList.find(item => item.id === id);
-    if (!c || !Array.isArray(c.questions) || c.questions.length === 0) {
-        showToast('Este desafio não possui perguntas anexadas para exportar.', 'info');
-        return;
-    }
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(c.questions, null, 2));
-    const a = document.createElement('a');
-    a.setAttribute("href", dataStr);
-    a.setAttribute("download", `perguntas_desafio_${c.title.replace(/\s+/g, '_').toLowerCase()}.json`);
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    showToast('JSON de perguntas do desafio exportado!', 'success');
-}
-
-function renderAdminChallengesList() {
-    const list = document.getElementById('adminChallengesList');
-    const badge = document.getElementById('challengesTotalBadge');
-    if (!list) return;
-
-    badge.textContent = challengesList.length;
-
-    if (challengesList.length === 0) {
-        list.innerHTML = `<p style="color:var(--text-muted);font-size:0.9rem;">Nenhum desafio cadastrado ainda.</p>`;
-        return;
-    }
-
-    list.innerHTML = challengesList.map(ch => {
-        const isActive = ch.active === true;
-        const qAttachedCount = Array.isArray(ch.questions) ? ch.questions.length : 0;
-
-        return `
-            <div class="challenge-card-item ${isActive ? 'is-current-active' : ''}">
-                <div class="challenge-card-header">
-                    <div>
-                        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.35rem;">
-                            <strong style="font-size:1.05rem;color:var(--text-main);">${ch.title}</strong>
-                            <span class="badge-pill ${isActive ? 'badge-active' : 'badge-inactive'}">
-                                ${isActive ? '🟢 DESAFIO OFICIAL ATIVO' : 'Inativo'}
-                            </span>
-                            <span class="badge-pill badge-series-default">Nível: ${ch.series === 'all' ? 'Multidisciplinar' : ch.series}</span>
-                            <span class="badge-pill" style="background:#fef3c7;color:#b45309;font-weight:700;">
-                                <i data-lucide="paperclip" size="12"></i> ${qAttachedCount} Perguntas Anexadas
-                            </span>
-                        </div>
-                        <p style="font-size:0.85rem;color:var(--text-muted);">${ch.description || 'Sem descrição.'}</p>
-                    </div>
-                    <div style="display:flex;gap:0.4rem;flex-shrink:0;flex-wrap:wrap;">
-                        ${!isActive ? `
-                            <button class="btn btn-success btn-sm" onclick="setActiveChallengeOfficial('${ch.id}')">
-                                <i data-lucide="check-circle" size="14"></i> Ativar como Vigente
-                            </button>
-                        ` : ''}
-                        <button class="btn btn-secondary btn-sm" onclick="exportChallengeQuestionsJSON('${ch.id}')" title="Baixar JSON das perguntas deste desafio">
-                            <i data-lucide="download" size="14"></i> JSON
-                        </button>
-                        <button class="btn btn-secondary btn-sm" onclick="startEditChallenge('${ch.id}')">
-                            <i data-lucide="edit" size="14"></i> Editar
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="removeChallenge('${ch.id}')">
-                            <i data-lucide="trash-2" size="14"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div style="display:flex;gap:1.5rem;font-size:0.82rem;color:var(--text-muted);border-top:1px solid var(--border);padding-top:0.75rem;flex-wrap:wrap;">
-                    <div>Nota de Corte Mínima: <strong style="color:var(--text-main);">${ch.minScore}%</strong></div>
-                    <div>Perguntas na Avaliação: <strong style="color:var(--text-main);">${ch.questionCount || qAttachedCount}</strong></div>
-                    <div>Carga Horária no Certificado: <strong style="color:var(--text-main);">${ch.workload || '8 Horas'}</strong></div>
-                </div>
-            </div>
-        `;
-    }).join('');
-    lucide.createIcons();
-}
-
-/**
- * CHAT E FLUXO DO ALUNO
- */
 function updateStudentStatsUI() {
     const accuracy = studentStats.total === 0 ? 0 : Math.round((studentStats.hits / studentStats.total) * 100);
     document.getElementById('statScore').textContent = studentStats.score;
@@ -2706,36 +2707,45 @@ function updateStudentStatsUI() {
     document.getElementById('mStatAccuracy').textContent = `${accuracy}%`;
 }
 
+/**
+ * FUNÇÕES DE CHAT
+ */
 function appendChatMessage(text, sender = 'bot', options = null) {
     const feed = document.getElementById('chatFeed');
     const row = document.createElement('div');
     row.className = `chat-bubble-row ${sender}`;
-
+    
     const icon = sender === 'user' ? 'user' : 'bot';
     let optionsMarkup = '';
-
+    
     if (options && options.length > 0) {
         optionsMarkup = `
             <div class="options-grid">
                 ${options.map(opt => `
                     <button class="opt-btn" onclick="onStudentOptionClick(this, '${opt.replace(/'/g, "\\'")}')">
-                        <i data-lucide="circle-dot" size="16"></i> <span>${opt}</span>
+                        <i data-lucide="circle-dot" size="16"></i> 
+                        <span>${opt}</span>
                     </button>
                 `).join('')}
             </div>
         `;
     }
-
-    const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-
+    
+    const formattedText = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>')
+        .replace(/`(.*?)`/g, '<code style="background:var(--samsung-gray-100);padding:0.2rem 0.4rem;border-radius:0.3rem;">$1</code>');
+    
     row.innerHTML = `
-        <div class="chat-avatar"><i data-lucide="${icon}" size="18"></i></div>
+        <div class="chat-avatar">
+            <i data-lucide="${icon}" size="18"></i>
+        </div>
         <div style="display:flex;flex-direction:column;width:100%;">
             <div class="chat-bubble">${formattedText}</div>
             ${optionsMarkup}
         </div>
     `;
-
+    
     feed.appendChild(row);
     lucide.createIcons();
     feed.scrollTop = feed.scrollHeight;
@@ -2744,9 +2754,18 @@ function appendChatMessage(text, sender = 'bot', options = null) {
 function submitChatMessage() {
     const input = document.getElementById('chatTextInput');
     const val = input.value.trim();
+    
     if (!val) return;
+    
     input.value = '';
+    input.disabled = true;
+    
     handleStudentCommand(val);
+    
+    setTimeout(() => {
+        input.disabled = false;
+        input.focus();
+    }, 300);
 }
 
 function handleStudentCommand(cmd) {
@@ -2820,14 +2839,28 @@ function handleStudentCommand(cmd) {
     appendChatMessage("Comando não reconhecido. Digite `/ajuda` para ver as opções ou toque em `/desafio`.");
 }
 
-function startChallengeMode() {
+/**
+ * FUNÇÕES DE DESAFIO
+ */
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+async function startChallengeMode() {
     if (!currentActiveChallenge) {
         appendChatMessage("⚠️ **Nenhum Desafio Oficial Ativo no momento.**\nA administração do sistema ainda não habilitou um desafio vigente. Aguarde ou pratique no modo livre com `/pergunta`.");
         return;
     }
-
-    let candidateQuestions = Array.isArray(currentActiveChallenge.questions) ? currentActiveChallenge.questions : [];
-
+    
+    let candidateQuestions = Array.isArray(currentActiveChallenge.questions) 
+        ? currentActiveChallenge.questions 
+        : [];
+    
     if (candidateQuestions.length === 0) {
         if (currentActiveChallenge.series && currentActiveChallenge.series !== 'all') {
             candidateQuestions = questionsBank.filter(q => q.series === currentActiveChallenge.series);
@@ -2835,20 +2868,20 @@ function startChallengeMode() {
             candidateQuestions = questionsBank;
         }
     }
-
+    
     if (candidateQuestions.length === 0) {
-        appendChatMessage(`⚠️ Este desafio oficial não possui perguntas cadastradas. Solicite ao administrador que anexe o JSON de perguntas na aba "Desafios & Certificação".`);
+        appendChatMessage("⚠️ Este desafio oficial não possui perguntas cadastradas. Solicite ao administrador que anexe o JSON de perguntas na aba \"Desafios & Certificação\".");
         return;
     }
-
+    
     const qCount = Math.min(candidateQuestions.length, currentActiveChallenge.questionCount || candidateQuestions.length);
-    challengePool = candidateQuestions.slice().sort(() => 0.5 - Math.random()).slice(0, qCount);
+    challengePool = shuffleArray(candidateQuestions).slice(0, qCount);
     challengeIndex = 0;
     challengeHits = 0;
     isChallengeRunning = true;
-
+    
     appendChatMessage(`🎯 **DESAFIO OFICIAL SAMSUNG INICIADO:**\n\n🏆 **${currentActiveChallenge.title}**\n📝 ${currentActiveChallenge.description || ''}\n\n📊 **Regras do Desafio:**\n• Total de Perguntas Exclusivas: **${qCount}**\n• Aproveitamento Mínimo para Certificação: **${currentActiveChallenge.minScore}%**\n• Carga Horária Reconhecida: **${currentActiveChallenge.workload || '8 Horas'}**\n\nBoa sorte, **${currentProfile.name}**! Vamos para a primeira questão:`);
-
+    
     setTimeout(deliverNextChallengeQuestion, 900);
 }
 
@@ -2857,10 +2890,10 @@ function deliverNextChallengeQuestion() {
         finishOfficialChallenge();
         return;
     }
-
+    
     activeQuestion = challengePool[challengeIndex];
     waitingAnswer = true;
-
+    
     appendChatMessage(`**Desafio Samsung [Questão ${challengeIndex + 1} de ${challengePool.length}]:**\n${activeQuestion.question}`, 'bot', activeQuestion.options);
 }
 
@@ -2874,12 +2907,11 @@ function deliverFreePracticeQuestion() {
         }
     }
     
-    // Se o banco estiver completamente vazio (porque o admin apagou tudo)
     if (pool.length === 0) {
-        appendChatMessage(`⚠️ **Banco de Questões Vazio.**\nO administrador ainda não cadastrou nenhuma pergunta no sistema. Volte mais tarde!`);
+        appendChatMessage("⚠️ **Banco de Questões Vazio.**\nO administrador ainda não cadastrou nenhuma pergunta no sistema. Volte mais tarde!");
         return;
     }
-
+    
     const randomQ = pool[Math.floor(Math.random() * pool.length)];
     activeQuestion = randomQ;
     waitingAnswer = true;
@@ -2897,26 +2929,25 @@ function onStudentOptionClick(btn, optionText) {
 
 async function evaluateStudentAnswer(answerText) {
     if (!waitingAnswer || !activeQuestion) return;
-
+    
+    waitingAnswer = false;
     studentStats.total += 1;
     const isCorrect = answerText.trim().toLowerCase() === activeQuestion.answer.trim().toLowerCase();
-
+    
     if (isCorrect) {
         studentStats.hits += 1;
         studentStats.score += 10;
         confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
-
+        
         if (isChallengeRunning) {
             challengeHits += 1;
-            appendChatMessage(`✅ **Correto!** Resposta precisa.`);
+            appendChatMessage("✅ **Correto!** Resposta precisa.");
             challengeIndex += 1;
             setTimeout(deliverNextChallengeQuestion, 1000);
         } else {
-            waitingAnswer = false;
             appendChatMessage("✅ **Correto!** Deseja outra pergunta livre ou iniciar o Desafio Oficial?", 'bot', ['/pergunta', '/desafio']);
         }
     } else {
-        waitingAnswer = false;
         const lastGrid = document.querySelector('#chatFeed .chat-bubble-row:last-of-type .options-grid');
         if (lastGrid) {
             lastGrid.querySelectorAll('.opt-btn').forEach(b => {
@@ -2925,7 +2956,7 @@ async function evaluateStudentAnswer(answerText) {
                 }
             });
         }
-
+        
         if (isChallengeRunning) {
             appendChatMessage(`❌ **Incorreto.** A resposta certa era: **${activeQuestion.answer}**`);
             challengeIndex += 1;
@@ -2934,22 +2965,24 @@ async function evaluateStudentAnswer(answerText) {
             appendChatMessage(`❌ **Resposta incorreta.** A resposta correta é: **${activeQuestion.answer}**`, 'bot', ['/pergunta', '/desafio']);
         }
     }
-
+    
     updateStudentStatsUI();
     if (currentUser) {
-        db.ref('stats/' + currentUser.uid).set(studentStats);
+        await retryOperation(async () => {
+            await db.ref('stats/' + currentUser.uid).set(studentStats);
+        });
     }
 }
 
 async function finishOfficialChallenge() {
     isChallengeRunning = false;
     waitingAnswer = false;
-
+    
     const totalQ = challengePool.length;
     const finalAccuracy = Math.round((challengeHits / totalQ) * 100);
     const requiredScore = currentActiveChallenge.minScore || 70;
     const isApproved = finalAccuracy >= requiredScore;
-
+    
     if (currentUser) {
         const attemptData = {
             challengeId: currentActiveChallenge.id,
@@ -2962,12 +2995,12 @@ async function finishOfficialChallenge() {
         };
         await db.ref(`challenge_results/${currentUser.uid}/${currentActiveChallenge.id}`).set(attemptData);
     }
-
+    
     if (isApproved) {
         confetti({ particleCount: 300, spread: 120, origin: { y: 0.5 } });
-
+        
         const authCode = 'SAM-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-
+        
         const certRecord = {
             userId: currentUser.uid,
             userName: currentProfile.name,
@@ -2980,11 +3013,11 @@ async function finishOfficialChallenge() {
             authCode: authCode,
             issuedAt: Date.now()
         };
-
+        
         if (currentUser) {
             await db.ref(`certificates/${currentUser.uid}/${currentActiveChallenge.id}`).set(certRecord);
         }
-
+        
         appendChatMessage(`🎉 **PARABÉNS, ${currentProfile.name.toUpperCase()}! VOCÊ FOI APROVADO(A)!**\n\n🏆 **Desafio:** ${currentActiveChallenge.title}\n✅ Acertos: **${challengeHits} de ${totalQ} (${finalAccuracy}%)**\n🎯 Nota de Corte Exigida: ${requiredScore}%\n📜 **Carga Horária Reconhecida:** ${currentActiveChallenge.workload || '8 Horas'}\n\nSeu **Certificado Oficial Samsung** foi emitido e registrado no sistema! Clique no botão abaixo para baixar o PDF:`, 'bot', ['/certificado']);
     } else {
         appendChatMessage(`🏁 **Desafio Oficial Finalizado.**\n\nVocê concluiu a rodada com **${challengeHits} de ${totalQ} acertos (${finalAccuracy}%)**.\n⚠️ A nota mínima estipulada pela Samsung para certificação é **${requiredScore}%**.\n\nNão desanime! Revise o conteúdo através do modo de prática livre e tente novamente quando se sentir preparado(a).`, 'bot', ['/desafio', '/pergunta']);
@@ -2992,33 +3025,48 @@ async function finishOfficialChallenge() {
 }
 
 async function emitStudentCertificate() {
-    if (!currentUser) return;
-
-    const snap = await db.ref(`certificates/${currentUser.uid}`).once('value');
-    const userCerts = snap.val();
-
-    if (!userCerts) {
-        showToast('Você ainda não possui certificados emitidos. Conclua o Desafio Oficial com nota de corte para liberar!', 'info');
-        appendChatMessage("⚠️ **Nenhum Certificado Emitido Ainda.**\nPara receber seu certificado, inicie e seja aprovado no **Desafio Oficial Samsung** digitando `/desafio`.");
+    if (!currentUser) {
+        showToast('Faça login para acessar seus certificados.', 'info');
         return;
     }
-
-    let certToPrint = null;
-    if (currentActiveChallenge && userCerts[currentActiveChallenge.id]) {
-        certToPrint = userCerts[currentActiveChallenge.id];
-    } else {
-        certToPrint = Object.values(userCerts).pop();
-    }
-
-    if (certToPrint) {
-        generateOfficialCertificatePDF(
-            certToPrint.userName || currentProfile.name,
-            certToPrint.challengeTitle,
-            certToPrint.workload,
-            certToPrint.accuracy,
-            certToPrint.authCode,
-            certToPrint.issuedAt
-        );
+    
+    loadingManager.show();
+    
+    try {
+        const snap = await retryOperation(async () => {
+            return await db.ref(`certificates/${currentUser.uid}`).once('value');
+        });
+        
+        const userCerts = snap.val();
+        
+        if (!userCerts) {
+            showToast('Você ainda não possui certificados emitidos.', 'info');
+            appendChatMessage("⚠️ **Nenhum Certificado Emitido Ainda.**\nPara receber seu certificado, seja aprovado no **Desafio Oficial Samsung** digitando `/desafio`.");
+            return;
+        }
+        
+        let certToPrint = null;
+        
+        if (currentActiveChallenge && userCerts[currentActiveChallenge.id]) {
+            certToPrint = userCerts[currentActiveChallenge.id];
+        } else {
+            certToPrint = Object.values(userCerts).pop();
+        }
+        
+        if (certToPrint) {
+            generateOfficialCertificatePDF(
+                certToPrint.userName || currentProfile.name,
+                certToPrint.challengeTitle,
+                certToPrint.workload,
+                certToPrint.accuracy,
+                certToPrint.authCode,
+                certToPrint.issuedAt
+            );
+        }
+    } catch (error) {
+        showToast('Erro ao carregar certificado.', 'error');
+    } finally {
+        loadingManager.hide();
     }
 }
 
@@ -3027,134 +3075,71 @@ function generateOfficialCertificatePDF(userName, challengeTitle, workload, accu
     const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-
-    // 1. Molduras Decorativas
-    doc.setDrawColor(20, 40, 160); // Samsung Blue
+    
+    doc.setDrawColor(20, 40, 160);
     doc.setLineWidth(4);
     doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
-
+    
     doc.setDrawColor(203, 213, 225);
     doc.setLineWidth(1);
     doc.rect(14, 14, pageWidth - 28, pageHeight - 28);
-
+    
     doc.setDrawColor(245, 158, 11);
     doc.setLineWidth(0.5);
     doc.rect(16, 16, pageWidth - 32, pageHeight - 32);
-
-    // 2. Cabeçalho Oficial
+    
     doc.setFontSize(28);
     doc.setTextColor(20, 40, 160);
     doc.text('CERTIFICADO OFICIAL DE CONCLUSÃO', pageWidth / 2, 42, { align: 'center' });
-
+    
     doc.setFontSize(11);
     doc.setTextColor(100, 116, 139);
     doc.text('PROGRAMA CORPORATIVO DE CAPACITAÇÃO E TREINAMENTO • SAMSUNG', pageWidth / 2, 50, { align: 'center' });
-
+    
     doc.setDrawColor(245, 158, 11);
     doc.setLineWidth(1.5);
     doc.line(pageWidth / 2 - 45, 56, pageWidth / 2 + 45, 56);
-
-    // 3. Conteúdo Central
+    
     doc.setFontSize(13);
     doc.setTextColor(15, 23, 42);
     doc.text('Certificamos por meio deste documento oficial que', pageWidth / 2, 72, { align: 'center' });
-
+    
     doc.setFontSize(25);
     doc.setTextColor(20, 40, 160);
     doc.text(userName.toUpperCase(), pageWidth / 2, 88, { align: 'center' });
-
+    
     doc.setFontSize(12);
     doc.setTextColor(51, 65, 85);
     const bodyText = `concluiu com êxito a avaliação do Desafio Oficial "${challengeTitle || 'Capacitação Técnica Samsung'}", cumprindo com distinção a carga horária programada de ${workload || '8 Horas'} e obtendo aproveitamento final de ${accuracy}% nos testes práticos e conceituais da plataforma Samsung Treinamentos.`;
     doc.text(bodyText, pageWidth / 2, 108, { align: 'center', maxWidth: 215 });
-
-    // 4. Rodapé e Data
+    
     const dateToUse = issuedAt ? new Date(issuedAt) : new Date();
     const dataExtenso = dateToUse.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
     doc.setFontSize(10);
     doc.setTextColor(100, 116, 139);
     doc.text(`Emitido oficialmente em ${dataExtenso}`, pageWidth / 2, 142, { align: 'center' });
-
+    
     doc.setDrawColor(148, 163, 184);
     doc.setLineWidth(0.5);
     doc.line(pageWidth / 2 - 40, 164, pageWidth / 2 + 40, 164);
-
+    
     doc.setFontSize(10);
     doc.setTextColor(15, 23, 42);
     doc.text('Diretoria de Treinamento & Desenvolvimento Samsung', pageWidth / 2, 171, { align: 'center' });
-
-    // 5. Código de Autenticidade
+    
     const hash = authCode || ('SAM-' + Math.random().toString(36).substring(2, 8).toUpperCase());
     doc.setFontSize(8);
     doc.setTextColor(148, 163, 184);
     doc.text(`Registro Autêntico de Validação: ${hash}`, 22, pageHeight - 16);
     doc.text(`Samsung Treinamentos Certification Engine`, pageWidth - 22, pageHeight - 16, { align: 'right' });
-
+    
     doc.save(`Certificado_Samsung_${userName.replace(/\s+/g, '_')}.pdf`);
     showToast('Certificado Oficial Samsung gerado e baixado com sucesso!', 'success');
 }
 
 /**
- * GAMIFICAÇÃO E DEMAIS FUNÇÕES ADMIN
+ * FUNÇÕES DE GAMIFICAÇÃO
  */
-function renderLeaderboardTables() {
-    const users = Object.entries(usersMap);
-    const ranked = users.map(([uid, u]) => {
-        const s = statsMap[uid] || { hits: 0, total: 0, score: 0 };
-        const acc = s.total === 0 ? 0 : Math.round((s.hits / s.total) * 100);
-        return {
-            uid,
-            name: u.name || u.email.split('@')[0],
-            email: u.email,
-            score: s.score || 0,
-            hits: s.hits || 0,
-            total: s.total || 0,
-            accuracy: acc
-        };
-    }).sort((a, b) => b.score - a.score || b.hits - a.hits);
-
-    const podiumEl = document.getElementById('adminPodiumContainer');
-    if (podiumEl) {
-        const p1 = ranked[0] || { name: '-', score: 0 };
-        const p2 = ranked[1] || { name: '-', score: 0 };
-        const p3 = ranked[2] || { name: '-', score: 0 };
-
-        podiumEl.innerHTML = `
-            <div class="podium-slot pos-2">
-                <div class="podium-avatar">2</div>
-                <strong style="font-size:0.85rem;margin-bottom:0.2rem;">${p2.name}</strong>
-                <span style="font-size:0.75rem;color:var(--text-muted);">${p2.score} pts</span>
-                <div class="podium-block">2º</div>
-            </div>
-            <div class="podium-slot pos-1">
-                <div class="podium-avatar">1</div>
-                <strong style="font-size:0.92rem;margin-bottom:0.2rem;">${p1.name}</strong>
-                <span style="font-size:0.8rem;color:var(--text-muted);">${p1.score} pts</span>
-                <div class="podium-block">1º</div>
-            </div>
-            <div class="podium-slot pos-3">
-                <div class="podium-avatar">3</div>
-                <strong style="font-size:0.85rem;margin-bottom:0.2rem;">${p3.name}</strong>
-                <span style="font-size:0.75rem;color:var(--text-muted);">${p3.score} pts</span>
-                <div class="podium-block">3º</div>
-            </div>
-        `;
-    }
-
-    const tbody = document.getElementById('adminLeaderboardTableBody');
-    if (tbody) {
-        tbody.innerHTML = ranked.map((r, i) => `
-            <tr>
-                <td><strong>#${i + 1}</strong></td>
-                <td><strong>${r.name}</strong> <span style="font-size:0.75rem;color:var(--text-muted);">(${r.email})</span></td>
-                <td><span style="color:var(--accent);font-weight:700;">${r.score} pts</span></td>
-                <td>${r.hits} / ${r.total}</td>
-                <td>${r.accuracy}%</td>
-            </tr>
-        `).join('');
-    }
-}
-
 function showLeaderboardModal() {
     const users = Object.entries(usersMap);
     const ranked = users.map(([uid, u]) => {
@@ -3164,16 +3149,19 @@ function showLeaderboardModal() {
             score: s.score || 0
         };
     }).sort((a, b) => b.score - a.score).slice(0, 5);
-
+    
     let rankingMsg = "🏆 **Top 5 Colaboradores Samsung:**\n\n";
     ranked.forEach((r, idx) => {
         const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '🎖️';
         rankingMsg += `${medal} **#${idx + 1}** ${r.name} - **${r.score} pontos**\n`;
     });
-
+    
     appendChatMessage(rankingMsg);
 }
 
+/**
+ * FUNÇÕES ADMIN
+ */
 function switchAdminSection(sectionId) {
     document.querySelectorAll('.admin-view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.admin-nav-item').forEach(btn => btn.classList.remove('active'));
@@ -3197,108 +3185,6 @@ function updateKPICards() {
         certCount += Object.keys(userCerts).length;
     });
     document.getElementById('kpiCertificatesCount').textContent = certCount;
-}
-
-function initOptionsBuilder(options = [], correctIdx = 0) {
-    const container = document.getElementById('optionsBuilderContainer');
-    container.innerHTML = '';
-    const initialCount = options.length > 0 ? options.length : 4;
-    for (let i = 0; i < initialCount; i++) {
-        const text = options[i] || '';
-        const isChecked = i === correctIdx;
-        addOptionBuilderRow(isChecked, text);
-    }
-}
-initOptionsBuilder();
-
-function addOptionBuilderRow(checked = false, textValue = '') {
-    const container = document.getElementById('optionsBuilderContainer');
-    const index = container.children.length;
-    const div = document.createElement('div');
-    div.className = 'option-builder-item';
-    div.innerHTML = `
-        <input type="text" class="opt-builder-input" placeholder="Opção ${index + 1}" value="${textValue}">
-        <label class="radio-tag">
-            <input type="radio" name="builderCorrectRadio" value="${index}" ${checked ? 'checked' : ''}>
-            <span>Correta</span>
-        </label>
-        ${index >= 2 ? `<button type="button" class="btn btn-secondary btn-sm" onclick="this.parentElement.remove()" style="padding:0.35rem 0.5rem;"><i data-lucide="trash-2" size="14"></i></button>` : ''}
-    `;
-    container.appendChild(div);
-    lucide.createIcons();
-}
-
-async function saveOrUpdateQuestion() {
-    const editId = document.getElementById('editingQuestionId').value;
-    const title = document.getElementById('adminQTitle').value.trim();
-    const series = document.getElementById('adminQSeries').value || 'Básico';
-    const question = document.getElementById('adminQText').value.trim();
-    const optionInputs = document.querySelectorAll('.opt-builder-input');
-    const options = [];
-    optionInputs.forEach(input => {
-        const val = input.value.trim();
-        if (val) options.push(val);
-    });
-    const checkedRadio = document.querySelector('input[name="builderCorrectRadio"]:checked');
-
-    if (!question) { showToast('Informe o enunciado da questão.', 'error'); return; }
-    if (options.length < 2) { showToast('Insira no mínimo 2 alternativas de resposta.', 'error'); return; }
-    if (!checkedRadio) { showToast('Selecione qual das opções é a correta.', 'error'); return; }
-
-    const correctIdx = parseInt(checkedRadio.value);
-    const correctAnswer = options[correctIdx];
-
-    if (!correctAnswer) { showToast('A opção correta selecionada está vazia.', 'error'); return; }
-
-    const payload = {
-        title: title || question.substring(0, 30),
-        series: series,
-        question: question,
-        options: options,
-        answer: correctAnswer,
-        updatedAt: Date.now()
-    };
-
-    try {
-        if (editId) {
-            await db.ref('questions/' + editId).update(payload);
-            showToast('Questão atualizada com sucesso!', 'success');
-        } else {
-            payload.createdAt = Date.now();
-            await db.ref('questions').push(payload);
-            showToast('Nova questão adicionada com sucesso!', 'success');
-        }
-        cancelEditingQuestion();
-    } catch (err) { showToast('Erro ao gravar dados: ' + err.message, 'error'); }
-}
-
-function startEditQuestion(id) {
-    const q = questionsBank.find(item => item.id === id);
-    if (!q) return;
-    document.getElementById('editingQuestionId').value = id;
-    document.getElementById('adminQTitle').value = q.title || '';
-    const seriesSelect = document.getElementById('adminQSeries');
-    seriesSelect.value = (q.series === 'Intermediário' || q.series === 'Avançado') ? q.series : 'Básico';
-    document.getElementById('adminQText').value = q.question || '';
-    const correctIndex = q.options.indexOf(q.answer);
-    initOptionsBuilder(q.options, correctIndex >= 0 ? correctIndex : 0);
-    document.getElementById('questionFormTitle').innerHTML = `<i data-lucide="edit" size="20"></i> Editando Questão`;
-    document.getElementById('btnSaveQuestionText').textContent = 'Atualizar Questão';
-    document.getElementById('btnCancelEdit').style.display = 'inline-flex';
-    document.querySelector('.admin-content-scroll').scrollTop = 0;
-    lucide.createIcons();
-}
-
-function cancelEditingQuestion() {
-    document.getElementById('editingQuestionId').value = '';
-    document.getElementById('adminQTitle').value = '';
-    document.getElementById('adminQSeries').value = 'Básico';
-    document.getElementById('adminQText').value = '';
-    document.getElementById('questionFormTitle').innerHTML = `<i data-lucide="plus-circle" size="20"></i> Cadastrar Nova Questão`;
-    document.getElementById('btnSaveQuestionText').textContent = 'Salvar Questão';
-    document.getElementById('btnCancelEdit').style.display = 'none';
-    initOptionsBuilder();
-    lucide.createIcons();
 }
 
 function getSeriesBadgeClass(series) {
@@ -3352,47 +3238,65 @@ function filterQuestionsList() {
     });
 }
 
-function removeQuestion(id) {
-    showConfirmDialog('Excluir Pergunta', 'Deseja remover esta questão definitivamente?', async () => {
-        try {
-            await db.ref('questions/' + id).remove();
-            showToast('Questão apagada com sucesso.', 'success');
-        } catch (e) {
-            showToast('Erro ao remover: ' + e.message, 'error');
-        }
-    });
-}
-
-function exportQuestionsJSON() {
-    if (questionsBank.length === 0) { showToast('Nenhuma questão para exportar.', 'info'); return; }
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(questionsBank, null, 2));
-    const a = document.createElement('a');
-    a.setAttribute("href", dataStr);
-    a.setAttribute("download", `samsung_questoes_${Date.now()}.json`);
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    showToast('Backup JSON gerado com sucesso!', 'success');
-}
-
-function importQuestionsJSON(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-        try {
-            const imported = JSON.parse(e.target.result);
-            if (!Array.isArray(imported)) { showToast('Formato JSON inválido. Deve ser uma lista de questões.', 'error'); return; }
-            for (const item of imported) {
-                const { id, ...cleanQ } = item;
-                if (!['Básico', 'Intermediário', 'Avançado'].includes(cleanQ.series)) { cleanQ.series = 'Básico'; }
-                await db.ref('questions').push({ ...cleanQ, importedAt: Date.now() });
-            }
-            showToast(`${imported.length} questões importadas com sucesso!`, 'success');
-        } catch (err) { showToast('Falha na importação do arquivo: ' + err.message, 'error'); }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
+function renderAdminChallengesList() {
+    const list = document.getElementById('adminChallengesList');
+    const badge = document.getElementById('challengesTotalBadge');
+    if (!list) return;
+    
+    badge.textContent = challengesList.length;
+    
+    if (challengesList.length === 0) {
+        list.innerHTML = `<p style="color:var(--text-muted);font-size:0.9rem;">Nenhum desafio cadastrado ainda.</p>`;
+        return;
+    }
+    
+    list.innerHTML = challengesList.map(ch => {
+        const isActive = ch.active === true;
+        const qAttachedCount = Array.isArray(ch.questions) ? ch.questions.length : 0;
+        
+        return `
+            <div class="challenge-card-item ${isActive ? 'is-current-active' : ''}">
+                <div class="challenge-card-header">
+                    <div>
+                        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.35rem;">
+                            <strong style="font-size:1.05rem;color:var(--text-main);">${ch.title}</strong>
+                            <span class="badge-pill ${isActive ? 'badge-active' : 'badge-inactive'}">
+                                ${isActive ? '🟢 DESAFIO OFICIAL ATIVO' : 'Inativo'}
+                            </span>
+                            <span class="badge-pill badge-series-default">Nível: ${ch.series === 'all' ? 'Multidisciplinar' : ch.series}</span>
+                            <span class="badge-pill" style="background:#fef3c7;color:#b45309;font-weight:700;">
+                                <i data-lucide="paperclip" size="12"></i> ${qAttachedCount} Perguntas Anexadas
+                            </span>
+                        </div>
+                        <p style="font-size:0.85rem;color:var(--text-muted);">${ch.description || 'Sem descrição.'}</p>
+                    </div>
+                    <div style="display:flex;gap:0.4rem;flex-shrink:0;flex-wrap:wrap;">
+                        ${!isActive ? `
+                            <button class="btn btn-success btn-sm" onclick="setActiveChallengeOfficial('${ch.id}')">
+                                <i data-lucide="check-circle" size="14"></i> Ativar como Vigente
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-secondary btn-sm" onclick="exportChallengeQuestionsJSON('${ch.id}')" title="Baixar JSON das perguntas deste desafio">
+                            <i data-lucide="download" size="14"></i> JSON
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="startEditChallenge('${ch.id}')">
+                            <i data-lucide="edit" size="14"></i> Editar
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="removeChallenge('${ch.id}')">
+                            <i data-lucide="trash-2" size="14"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="display:flex;gap:1.5rem;font-size:0.82rem;color:var(--text-muted);border-top:1px solid var(--border);padding-top:0.75rem;flex-wrap:wrap;">
+                    <div>Nota de Corte Mínima: <strong style="color:var(--text-main);">${ch.minScore}%</strong></div>
+                    <div>Perguntas na Avaliação: <strong style="color:var(--text-main);">${ch.questionCount || qAttachedCount}</strong></div>
+                    <div>Carga Horária no Certificado: <strong style="color:var(--text-main);">${ch.workload || '8 Horas'}</strong></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    lucide.createIcons();
 }
 
 function renderAdminUsersTable() {
@@ -3440,26 +3344,6 @@ function filterUsersList() {
     });
 }
 
-function toggleUserRoleAdmin(uid, currentRole) {
-    const newRole = currentRole === 'admin' ? 'user' : 'admin';
-    showConfirmDialog('Alterar Papel de Acesso', `Deseja alterar a permissão deste colaborador para ${newRole}?`, async () => {
-        try {
-            await db.ref('users/' + uid + '/role').set(newRole);
-            showToast('Permissão atualizada.', 'success');
-        } catch (e) { showToast('Erro: ' + e.message, 'error'); }
-    });
-}
-
-function resetUserProgress(uid) {
-    showConfirmDialog('Zerar Progresso', 'Deseja reiniciar a pontuação e acertos deste aluno?', async () => {
-        try {
-            await db.ref('stats/' + uid).set({ hits: 0, total: 0, score: 0 });
-            await db.ref(`challenge_results/${uid}`).remove();
-            showToast('Progresso zerado com sucesso.', 'success');
-        } catch (e) { showToast('Erro ao zerar: ' + e.message, 'error'); }
-    });
-}
-
 function renderAdminReportsTable() {
     const tbody = document.getElementById('adminReportsTableBody');
     if (!tbody) return;
@@ -3478,7 +3362,7 @@ function renderAdminReportsTable() {
             let challengeScoreTxt = `-`;
             let hasCert = false;
             let certObj = null;
-
+            
             if (currentActiveChallenge && resultsMap[uid] && resultsMap[uid][currentActiveChallenge.id]) {
                 const res = resultsMap[uid][currentActiveChallenge.id];
                 challengeScoreTxt = `${res.hits}/${res.total} (${res.accuracy}%)`;
@@ -3488,7 +3372,7 @@ function renderAdminReportsTable() {
                     challengeStatus = `<span class="badge-pill" style="background:#fee2e2;color:#991b1b;">Reprovado</span>`;
                 }
             }
-
+            
             if (certificatesMap[uid]) {
                 if (currentActiveChallenge && certificatesMap[uid][currentActiveChallenge.id]) {
                     hasCert = true;
@@ -3498,7 +3382,7 @@ function renderAdminReportsTable() {
                     if (allCerts.length > 0) { hasCert = true; certObj = allCerts[0]; }
                 }
             }
-
+            
             return `
                 <tr>
                     <td><strong>${name}</strong></td>
@@ -3520,25 +3404,504 @@ function renderAdminReportsTable() {
     });
 }
 
+function renderLeaderboardTables() {
+    const users = Object.entries(usersMap);
+    const ranked = users.map(([uid, u]) => {
+        const s = statsMap[uid] || { hits: 0, total: 0, score: 0 };
+        const acc = s.total === 0 ? 0 : Math.round((s.hits / s.total) * 100);
+        return {
+            uid,
+            name: u.name || u.email.split('@')[0],
+            email: u.email,
+            score: s.score || 0,
+            hits: s.hits || 0,
+            total: s.total || 0,
+            accuracy: acc
+        };
+    }).sort((a, b) => b.score - a.score || b.hits - a.hits);
+    
+    const podiumEl = document.getElementById('adminPodiumContainer');
+    if (podiumEl) {
+        const p1 = ranked[0] || { name: '-', score: 0 };
+        const p2 = ranked[1] || { name: '-', score: 0 };
+        const p3 = ranked[2] || { name: '-', score: 0 };
+        
+        podiumEl.innerHTML = `
+            <div class="podium-slot pos-2">
+                <div class="podium-avatar">2</div>
+                <strong style="font-size:0.85rem;margin-bottom:0.2rem;">${p2.name}</strong>
+                <span style="font-size:0.75rem;color:var(--text-muted);">${p2.score} pts</span>
+                <div class="podium-block">2º</div>
+            </div>
+            <div class="podium-slot pos-1">
+                <div class="podium-avatar">1</div>
+                <strong style="font-size:0.92rem;margin-bottom:0.2rem;">${p1.name}</strong>
+                <span style="font-size:0.8rem;color:var(--text-muted);">${p1.score} pts</span>
+                <div class="podium-block">1º</div>
+            </div>
+            <div class="podium-slot pos-3">
+                <div class="podium-avatar">3</div>
+                <strong style="font-size:0.85rem;margin-bottom:0.2rem;">${p3.name}</strong>
+                <span style="font-size:0.75rem;color:var(--text-muted);">${p3.score} pts</span>
+                <div class="podium-block">3º</div>
+            </div>
+        `;
+    }
+    
+    const tbody = document.getElementById('adminLeaderboardTableBody');
+    if (tbody) {
+        tbody.innerHTML = ranked.map((r, i) => `
+            <tr>
+                <td><strong>#${i + 1}</strong></td>
+                <td><strong>${r.name}</strong> <span style="font-size:0.75rem;color:var(--text-muted);">(${r.email})</span></td>
+                <td><span style="color:var(--accent);font-weight:700;">${r.score} pts</span></td>
+                <td>${r.hits} / ${r.total}</td>
+                <td>${r.accuracy}%</td>
+            </tr>
+        `).join('');
+    }
+}
+
+/**
+ * FUNÇÕES DE CRUD - QUESTÕES
+ */
+function initOptionsBuilder(options = [], correctIdx = 0) {
+    const container = document.getElementById('optionsBuilderContainer');
+    container.innerHTML = '';
+    const initialCount = options.length > 0 ? options.length : 4;
+    for (let i = 0; i < initialCount; i++) {
+        const text = options[i] || '';
+        const isChecked = i === correctIdx;
+        addOptionBuilderRow(isChecked, text);
+    }
+}
+
+function addOptionBuilderRow(checked = false, textValue = '') {
+    const container = document.getElementById('optionsBuilderContainer');
+    const index = container.children.length;
+    const div = document.createElement('div');
+    div.className = 'option-builder-item';
+    div.innerHTML = `
+        <input type="text" class="opt-builder-input" placeholder="Opção ${index + 1}" value="${textValue}">
+        <label class="radio-tag">
+            <input type="radio" name="builderCorrectRadio" value="${index}" ${checked ? 'checked' : ''}>
+            <span>Correta</span>
+        </label>
+        ${index >= 2 ? `<button type="button" class="btn btn-secondary btn-sm" onclick="this.parentElement.remove()" style="padding:0.35rem 0.5rem;"><i data-lucide="trash-2" size="14"></i></button>` : ''}
+    `;
+    container.appendChild(div);
+    lucide.createIcons();
+}
+
+async function saveOrUpdateQuestion() {
+    const editId = document.getElementById('editingQuestionId').value;
+    const title = document.getElementById('adminQTitle').value.trim();
+    const series = document.getElementById('adminQSeries').value || 'Básico';
+    const question = document.getElementById('adminQText').value.trim();
+    const optionInputs = document.querySelectorAll('.opt-builder-input');
+    const options = [];
+    optionInputs.forEach(input => {
+        const val = input.value.trim();
+        if (val) options.push(val);
+    });
+    const checkedRadio = document.querySelector('input[name="builderCorrectRadio"]:checked');
+    
+    if (!question) { showToast('Informe o enunciado da questão.', 'error'); return; }
+    if (options.length < 2) { showToast('Insira no mínimo 2 alternativas de resposta.', 'error'); return; }
+    if (!checkedRadio) { showToast('Selecione qual das opções é a correta.', 'error'); return; }
+    
+    const correctIdx = parseInt(checkedRadio.value);
+    const correctAnswer = options[correctIdx];
+    
+    if (!correctAnswer) { showToast('A opção correta selecionada está vazia.', 'error'); return; }
+    
+    const payload = {
+        title: title || question.substring(0, 30),
+        series: series,
+        question: question,
+        options: options,
+        answer: correctAnswer,
+        updatedAt: Date.now()
+    };
+    
+    try {
+        if (editId) {
+            await db.ref('questions/' + editId).update(payload);
+            showToast('Questão atualizada com sucesso!', 'success');
+        } else {
+            payload.createdAt = Date.now();
+            await db.ref('questions').push(payload);
+            showToast('Nova questão adicionada com sucesso!', 'success');
+        }
+        cancelEditingQuestion();
+    } catch (err) { showToast('Erro ao gravar dados: ' + err.message, 'error'); }
+}
+
+function startEditQuestion(id) {
+    const q = questionsBank.find(item => item.id === id);
+    if (!q) return;
+    document.getElementById('editingQuestionId').value = id;
+    document.getElementById('adminQTitle').value = q.title || '';
+    const seriesSelect = document.getElementById('adminQSeries');
+    seriesSelect.value = (q.series === 'Intermediário' || q.series === 'Avançado') ? q.series : 'Básico';
+    document.getElementById('adminQText').value = q.question || '';
+    const correctIndex = q.options.indexOf(q.answer);
+    initOptionsBuilder(q.options, correctIndex >= 0 ? correctIndex : 0);
+    document.getElementById('questionFormTitle').innerHTML = `<i data-lucide="edit" size="20"></i> Editando Questão`;
+    document.getElementById('btnSaveQuestionText').textContent = 'Atualizar Questão';
+    document.getElementById('btnCancelEdit').style.display = 'inline-flex';
+    document.querySelector('.admin-content-scroll').scrollTop = 0;
+    lucide.createIcons();
+}
+
+function cancelEditingQuestion() {
+    document.getElementById('editingQuestionId').value = '';
+    document.getElementById('adminQTitle').value = '';
+    document.getElementById('adminQSeries').value = 'Básico';
+    document.getElementById('adminQText').value = '';
+    document.getElementById('questionFormTitle').innerHTML = `<i data-lucide="plus-circle" size="20"></i> Cadastrar Nova Questão`;
+    document.getElementById('btnSaveQuestionText').textContent = 'Salvar Questão';
+    document.getElementById('btnCancelEdit').style.display = 'none';
+    initOptionsBuilder();
+    lucide.createIcons();
+}
+
+function removeQuestion(id) {
+    showConfirmDialog('Excluir Pergunta', 'Deseja remover esta questão definitivamente?', async () => {
+        try {
+            await db.ref('questions/' + id).remove();
+            showToast('Questão apagada com sucesso.', 'success');
+        } catch (e) {
+            showToast('Erro ao remover: ' + e.message, 'error');
+        }
+    });
+}
+
+function exportQuestionsJSON() {
+    if (questionsBank.length === 0) { showToast('Nenhuma questão para exportar.', 'info'); return; }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(questionsBank, null, 2));
+    const a = document.createElement('a');
+    a.setAttribute("href", dataStr);
+    a.setAttribute("download", `samsung_questoes_${Date.now()}.json`);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast('Backup JSON gerado com sucesso!', 'success');
+}
+
+function importQuestionsJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        try {
+            const imported = JSON.parse(e.target.result);
+            if (!Array.isArray(imported)) { showToast('Formato JSON inválido. Deve ser uma lista de questões.', 'error'); return; }
+            for (const item of imported) {
+                const { id, ...cleanQ } = item;
+                if (!['Básico', 'Intermediário', 'Avançado'].includes(cleanQ.series)) { cleanQ.series = 'Básico'; }
+                await db.ref('questions').push({ ...cleanQ, importedAt: Date.now() });
+            }
+            showToast(`${imported.length} questões importadas com sucesso!`, 'success');
+        } catch (err) { showToast('Falha na importação do arquivo: ' + err.message, 'error'); }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+/**
+ * FUNÇÕES DE CRUD - DESAFIOS
+ */
+function downloadChallengeJsonTemplate() {
+    const template = [
+        {
+            "question": "Qual tecnologia exclusiva da Samsung climatiza o ambiente sem vento frio direto?",
+            "options": ["WindFree™", "Turbo Cool", "Digital Inverter", "Eco Flow"],
+            "answer": "WindFree™",
+            "series": "Básico"
+        },
+        {
+            "question": "A principal vantagem da tecnologia Samsung Digital Inverter é:",
+            "options": ["Ajustar a rotação de forma contínua proporcionando alta eficiência energética", "Desligar o compressor a cada ciclo de 5 minutos", "Aumentar o ruído sonoro para indicar refrigeração", "Funcionar exclusivamente em 110V"],
+            "answer": "Ajustar a rotação de forma contínua proporcionando alta eficiência energética",
+            "series": "Básico"
+        }
+    ];
+    
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(template, null, 2));
+    const a = document.createElement('a');
+    a.setAttribute("href", dataStr);
+    a.setAttribute("download", `modelo_perguntas_desafio_samsung.json`);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast('Modelo JSON baixado! Preencha e clique em "Carregar Desafio (JSON)".', 'info');
+}
+
+function handleChallengeJsonUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            if (!Array.isArray(parsed) || parsed.length === 0) {
+                showToast('O arquivo JSON deve conter uma lista com pelo menos 1 pergunta.', 'error');
+                return;
+            }
+            
+            const cleanList = [];
+            for (let i = 0; i < parsed.length; i++) {
+                const item = parsed[i];
+                if (!item.question || typeof item.question !== 'string' || item.question.trim().length === 0) {
+                    showToast(`Pergunta ${i + 1} inválida: campo "question" é obrigatório.`, 'error');
+                    return;
+                }
+                if (!Array.isArray(item.options) || item.options.length < 2) {
+                    showToast(`Pergunta ${i + 1} inválida: campo "options" deve conter ao menos 2 alternativas.`, 'error');
+                    return;
+                }
+                if (!item.answer || !item.options.includes(item.answer)) {
+                    showToast(`Pergunta ${i + 1} inválida: a resposta "answer" deve ser idêntica a uma das opções em "options".`, 'error');
+                    return;
+                }
+                
+                cleanList.push({
+                    question: item.question.trim(),
+                    options: item.options.map(opt => String(opt).trim()),
+                    answer: String(item.answer).trim(),
+                    series: ['Básico', 'Intermediário', 'Avançado'].includes(item.series) ? item.series : 'Básico'
+                });
+            }
+            
+            challengeStagedQuestions = cleanList;
+            document.getElementById('challengeQuestionCountInput').value = cleanList.length;
+            renderStagedQuestions();
+            showToast(`✅ ${cleanList.length} perguntas carregadas e anexadas ao desafio Samsung com sucesso!`, 'success');
+        } catch (err) {
+            showToast('Erro ao ler o arquivo JSON: formato incorreto ou sintaxe inválida.', 'error');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function removeStagedQuestion(index) {
+    challengeStagedQuestions.splice(index, 1);
+    document.getElementById('challengeQuestionCountInput').value = challengeStagedQuestions.length;
+    renderStagedQuestions();
+    showToast('Pergunta removida do desafio.', 'info');
+}
+
+function renderStagedQuestions() {
+    const container = document.getElementById('stagedQuestionsContainer');
+    if (!container) return;
+    
+    if (!challengeStagedQuestions || challengeStagedQuestions.length === 0) {
+        container.innerHTML = `<p style="font-size:0.85rem;color:var(--text-muted);font-style:italic;">Nenhuma pergunta anexada a este desafio ainda. Clique em "Carregar Desafio (JSON)" ou baixe o modelo acima.</p>`;
+        return;
+    }
+    
+    container.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
+            <span style="font-size:0.82rem;font-weight:700;color:var(--accent);">
+                Total de Questões Anexadas: ${challengeStagedQuestions.length}
+            </span>
+            <button class="btn btn-secondary btn-sm" type="button" onclick="challengeStagedQuestions=[];renderStagedQuestions();" style="color:var(--danger);">
+                Limpar Todas
+            </button>
+        </div>
+        ${challengeStagedQuestions.map((q, idx) => `
+            <div class="attached-question-pill">
+                <div style="flex:1;min-width:0;">
+                    <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${idx + 1}. ${q.question}</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">
+                        Gabarito: <strong style="color:var(--success);">${q.answer}</strong> • ${q.options.length} alternativas • Nível: ${q.series || 'Básico'}
+                    </div>
+                </div>
+                <button class="btn btn-danger btn-sm" type="button" onclick="removeStagedQuestion(${idx})" style="padding:0.3rem 0.5rem;">
+                    <i data-lucide="x" size="14"></i>
+                </button>
+            </div>
+        `).join('')}
+    `;
+    lucide.createIcons();
+}
+
+async function saveOrUpdateChallenge() {
+    const editId = document.getElementById('editingChallengeId').value;
+    const title = document.getElementById('challengeTitleInput').value.trim();
+    const series = document.getElementById('challengeSeriesSelect').value;
+    const workload = document.getElementById('challengeWorkloadInput').value.trim() || '8 Horas';
+    const minScore = parseInt(document.getElementById('challengeMinScoreInput').value) || 70;
+    const questionCount = parseInt(document.getElementById('challengeQuestionCountInput').value) || (challengeStagedQuestions.length || 5);
+    const description = document.getElementById('challengeDescriptionInput').value.trim();
+    
+    if (!title) {
+        showToast('Informe o título do Desafio Oficial (constará no Certificado).', 'error');
+        return;
+    }
+    
+    if (!challengeStagedQuestions || challengeStagedQuestions.length === 0) {
+        showToast('Atenção: Carregue o arquivo JSON com as perguntas deste desafio antes de salvar.', 'error');
+        return;
+    }
+    
+    const payload = {
+        title,
+        series,
+        workload,
+        minScore: Math.min(100, Math.max(10, minScore)),
+        questionCount: Math.min(questionCount, challengeStagedQuestions.length),
+        description: description || 'Desafio Oficial de Certificação Corporativa Samsung Treinamentos.',
+        questions: challengeStagedQuestions,
+        updatedAt: Date.now()
+    };
+    
+    try {
+        if (editId) {
+            await db.ref('challenges/' + editId).update(payload);
+            showToast('Desafio e perguntas anexadas atualizados com sucesso!', 'success');
+        } else {
+            payload.active = challengesList.length === 0;
+            payload.createdAt = Date.now();
+            await db.ref('challenges').push(payload);
+            showToast('Novo desafio oficial e suas perguntas foram salvos no Firebase!', 'success');
+        }
+        cancelChallengeEdit();
+    } catch (err) {
+        showToast('Erro ao salvar desafio: ' + err.message, 'error');
+    }
+}
+
+function startEditChallenge(id) {
+    const c = challengesList.find(item => item.id === id);
+    if (!c) return;
+    
+    document.getElementById('editingChallengeId').value = id;
+    document.getElementById('challengeTitleInput').value = c.title || '';
+    document.getElementById('challengeSeriesSelect').value = c.series || 'all';
+    document.getElementById('challengeWorkloadInput').value = c.workload || '8 Horas';
+    document.getElementById('challengeMinScoreInput').value = c.minScore || 70;
+    document.getElementById('challengeQuestionCountInput').value = c.questionCount || (c.questions?.length || 5);
+    document.getElementById('challengeDescriptionInput').value = c.description || '';
+    
+    challengeStagedQuestions = Array.isArray(c.questions) ? JSON.parse(JSON.stringify(c.questions)) : [];
+    renderStagedQuestions();
+    
+    document.getElementById('challengeFormTitle').innerHTML = `<i data-lucide="edit" size="20"></i> Editando Desafio Samsung & Perguntas`;
+    document.getElementById('btnSaveChallengeText').textContent = 'Atualizar Desafio';
+    document.getElementById('btnCancelChallengeEdit').style.display = 'inline-flex';
+    
+    document.querySelector('.admin-content-scroll').scrollTop = 0;
+    lucide.createIcons();
+}
+
+function cancelChallengeEdit() {
+    document.getElementById('editingChallengeId').value = '';
+    document.getElementById('challengeTitleInput').value = '';
+    document.getElementById('challengeSeriesSelect').value = 'all';
+    document.getElementById('challengeWorkloadInput').value = '8 Horas';
+    document.getElementById('challengeMinScoreInput').value = 70;
+    document.getElementById('challengeQuestionCountInput').value = 5;
+    document.getElementById('challengeDescriptionInput').value = '';
+    challengeStagedQuestions = [];
+    renderStagedQuestions();
+    
+    document.getElementById('challengeFormTitle').innerHTML = `<i data-lucide="plus-circle" size="20"></i> Criar Novo Desafio Samsung`;
+    document.getElementById('btnSaveChallengeText').textContent = 'Salvar Desafio';
+    document.getElementById('btnCancelChallengeEdit').style.display = 'none';
+    lucide.createIcons();
+}
+
+async function setActiveChallengeOfficial(targetId) {
+    showConfirmDialog('Ativar Desafio Oficial', 'Definir este desafio como o Desafio Oficial ativo para todos os participantes?', async () => {
+        try {
+            const updates = {};
+            challengesList.forEach(ch => {
+                updates['challenges/' + ch.id + '/active'] = (ch.id === targetId);
+            });
+            await db.ref().update(updates);
+            showToast('Desafio ativado com sucesso como oficial!', 'success');
+        } catch (e) {
+            showToast('Erro ao ativar: ' + e.message, 'error');
+        }
+    });
+}
+
+function removeChallenge(id) {
+    showConfirmDialog('Excluir Desafio', 'Tem certeza que deseja apagar este desafio e todas as suas perguntas vinculadas?', async () => {
+        try {
+            await db.ref('challenges/' + id).remove();
+            showToast('Desafio removido com sucesso.', 'success');
+        } catch (e) {
+            showToast('Erro ao remover: ' + e.message, 'error');
+        }
+    });
+}
+
+function exportChallengeQuestionsJSON(id) {
+    const c = challengesList.find(item => item.id === id);
+    if (!c || !Array.isArray(c.questions) || c.questions.length === 0) {
+        showToast('Este desafio não possui perguntas anexadas para exportar.', 'info');
+        return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(c.questions, null, 2));
+    const a = document.createElement('a');
+    a.setAttribute("href", dataStr);
+    a.setAttribute("download", `perguntas_desafio_${c.title.replace(/\s+/g, '_').toLowerCase()}.json`);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast('JSON de perguntas do desafio exportado!', 'success');
+}
+
+/**
+ * FUNÇÕES DE USUÁRIOS
+ */
+function toggleUserRoleAdmin(uid, currentRole) {
+    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+    showConfirmDialog('Alterar Papel de Acesso', `Deseja alterar a permissão deste colaborador para ${newRole}?`, async () => {
+        try {
+            await db.ref('users/' + uid + '/role').set(newRole);
+            showToast('Permissão atualizada.', 'success');
+        } catch (e) { showToast('Erro: ' + e.message, 'error'); }
+    });
+}
+
+function resetUserProgress(uid) {
+    showConfirmDialog('Zerar Progresso', 'Deseja reiniciar a pontuação e acertos deste aluno?', async () => {
+        try {
+            await db.ref('stats/' + uid).set({ hits: 0, total: 0, score: 0 });
+            await db.ref(`challenge_results/${uid}`).remove();
+            showToast('Progresso zerado com sucesso.', 'success');
+        } catch (e) { showToast('Erro ao zerar: ' + e.message, 'error'); }
+    });
+}
+
+/**
+ * FUNÇÕES DE RELATÓRIOS
+ */
 function exportFullTrainingPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-
+    
     doc.setFontSize(18);
     doc.setTextColor(20, 40, 160);
     doc.text('Relatório Consolidado de Treinamento - Samsung', 14, 20);
-
+    
     doc.setFontSize(10);
     doc.setTextColor(100, 116, 139);
     doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 14, 28);
     doc.text(`Desafio Oficial Vigente: ${currentActiveChallenge ? currentActiveChallenge.title : 'Nenhum'}`, 14, 34);
-
+    
     let y = 46;
     doc.setFontSize(11);
     doc.setTextColor(15, 23, 42);
     doc.text('Desempenho Geral por Colaborador:', 14, y);
     y += 8;
-
+    
     const entries = Object.entries(usersMap);
     entries.forEach(([uid, u]) => {
         if (y > 275) { doc.addPage(); y = 20; }
@@ -3549,18 +3912,21 @@ function exportFullTrainingPDF() {
         doc.text(`• ${name} (${u.email}) | Precisão: ${accuracy}% (${s.hits}/${s.total}) | Score: ${s.score} pts`, 16, y);
         y += 7;
     });
-
+    
     doc.save(`samsung_relatorio_geral_${Date.now()}.pdf`);
     showToast('Relatório geral exportado em PDF com sucesso!', 'success');
 }
 
+/**
+ * FUNÇÕES DE NOTIFICAÇÕES
+ */
 async function submitNotificationBroadcast() {
     const title = document.getElementById('broadcastTitle').value.trim();
     const series = document.getElementById('broadcastSeries').value;
     const body = document.getElementById('broadcastBody').value.trim();
-
+    
     if (!title || !body) { showToast('Preencha título e mensagem.', 'error'); return; }
-
+    
     try {
         await db.ref('notifications').push({
             title,
@@ -3578,7 +3944,7 @@ async function submitNotificationBroadcast() {
 function renderBroadcastHistory() {
     const list = document.getElementById('broadcastHistoryList');
     if (!list) return;
-
+    
     if (notificationsList.length === 0) {
         list.innerHTML = `<p style="color:var(--text-muted);font-size:0.85rem;">Nenhum comunicado enviado até o momento.</p>`;
         return;
@@ -3600,7 +3966,88 @@ function renderBroadcastHistory() {
     }).join('');
 }
 
+/**
+ * OBSERVER DE AUTENTICAÇÃO
+ */
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        currentUser = user;
+        
+        try {
+            const snap = await retryOperation(async () => {
+                return await db.ref('users/' + user.uid).once('value');
+            });
+            
+            const data = snap.val() || {};
+            
+            currentProfile = {
+                name: data.name || user.displayName || user.email.split('@')[0],
+                email: user.email,
+                role: data.role || 'user'
+            };
+            
+            await db.ref('users/' + user.uid + '/lastLogin').set(Date.now());
+            
+            document.getElementById('studentWelcomeText').textContent = `Bem-vindo, ${currentProfile.name}`;
+            document.getElementById('userSidebarName').textContent = currentProfile.name;
+            document.getElementById('userSidebarRole').textContent = currentProfile.role === 'admin' ? 'Administrador' : 'Colaborador';
+            document.getElementById('adminCurrentUserName').textContent = currentProfile.name;
+            
+            const initials = currentProfile.name
+                .split(' ')
+                .map(n => n[0])
+                .slice(0, 2)
+                .join('')
+                .toUpperCase();
+            
+            document.getElementById('userSidebarInitials').textContent = initials || 'ST';
+            
+            const btnAdmin = document.getElementById('btnEnterAdmin');
+            btnAdmin.style.display = currentProfile.role === 'admin' ? 'inline-flex' : 'none';
+            
+            setupRealtimeData();
+            showScreen('screenApp');
+            
+        } catch (error) {
+            console.error('Erro ao carregar dados do usuário:', error);
+            showToast('Erro ao carregar dados do usuário.', 'error');
+        }
+    } else {
+        currentUser = null;
+        currentProfile = { role: 'user', name: '', email: '' };
+        showScreen('screenLogin');
+    }
+});
+
+/**
+ * INICIALIZAÇÃO
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    loadingManager.init();
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === '/') {
+            e.preventDefault();
+            handleStudentCommand('/ajuda');
+        }
+        
+        if (e.key === 'Escape') {
+            closeAllModals();
+        }
+    });
+    
+    window.addEventListener('online', () => {
+        showToast('Conexão restaurada!', 'success');
+    });
+    
+    window.addEventListener('offline', () => {
+        showToast('Sem conexão com a internet.', 'warning');
+    });
+});
+
+// Inicializar ícones
+initOptionsBuilder();
 lucide.createIcons();
 </script>
 </body>
-</html>
+    </html>
